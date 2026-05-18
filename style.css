@@ -1,0 +1,343 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  direction: rtl;
+  overflow: hidden;
+  background: black;
+}
+
+/* מסכים */
+.screen {
+  display: none;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+}
+
+.active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* מסך בית */
+#homeScreen {
+
+  background:
+    linear-gradient(
+      rgba(255,105,180,0.35),
+      rgba(0,0,0,0.75)
+    ),
+
+    url("https://images.unsplash.com/photo-1513151233558-d860c5398176");
+
+  background-size: cover;
+  background-position: center;
+}
+
+/* שכבה */
+.homeOverlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* תוכן */
+.homeContent {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  width: 90%;
+}
+
+h1 {
+  color: white;
+  font-size: 70px;
+  margin-bottom: 15px;
+
+  text-shadow:
+    0 0 25px rgba(255,255,255,0.5);
+}
+
+.subtitle {
+  color: white;
+  font-size: 28px;
+  margin-bottom: 45px;
+}
+
+/* כפתורים */
+.buttons {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(220px, 1fr));
+
+  gap: 25px;
+
+  max-width: 1200px;
+
+  margin: auto;
+}
+
+button {
+
+  padding: 24px;
+
+  border: none;
+
+  border-radius: 28px;
+
+  font-size: 24px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  color: white;
+
+  transition: 0.3s;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,0.22),
+      rgba(255,192,203,0.15)
+    );
+
+  backdrop-filter: blur(12px);
+
+  box-shadow:
+    0 0 20px rgba(0,0,0,0.4);
+}
+
+button:hover {
+
+  transform:
+    translateY(-8px)
+    scale(1.03);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,0.35),
+      rgba(255,105,180,0.25)
+    );
+
+  box-shadow:
+    0 0 35px rgba(255,192,203,0.5);
+}
+
+/* מסכי ספירה */
+#countdownScreen,
+#birthdayScreen {
+
+  background-size: cover;
+  background-position: center;
+
+  background-image:
+    url("https://images.unsplash.com/photo-1464349095431-e9a21285b5f3");
+}
+
+/* שכבה כהה */
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      rgba(0,0,0,0.55),
+      rgba(0,0,0,0.82)
+    );
+
+  pointer-events: none;
+}
+
+/* שכבה ורודה */
+.pinkOverlay {
+
+  background:
+    linear-gradient(
+      rgba(255,105,180,0.35),
+      rgba(0,0,0,0.7)
+    );
+}
+
+/* תוכן */
+.content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  width: 100%;
+  padding: 20px;
+}
+
+/* חזרה */
+.backBtn {
+
+  position: absolute;
+
+  top: 20px;
+
+  right: 20px;
+
+  z-index: 10;
+
+  padding: 14px 22px;
+
+  font-size: 20px;
+}
+
+/* ספירה */
+#countdown {
+
+  display: flex;
+
+  direction: ltr;
+
+  justify-content: center;
+
+  gap: 30px;
+
+  flex-wrap: wrap;
+
+  margin-top: 50px;
+}
+
+/* קופסאות */
+.box {
+
+  width: 180px;
+
+  padding: 35px;
+
+  border-radius: 35px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,0.2),
+      rgba(255,192,203,0.12)
+    );
+
+  backdrop-filter: blur(12px);
+
+  box-shadow:
+    0 0 25px rgba(0,0,0,0.5);
+
+  transition: 0.3s;
+}
+
+.box:hover {
+
+  transform:
+    translateY(-10px);
+
+  box-shadow:
+    0 0 40px rgba(255,192,203,0.4);
+}
+
+.box span {
+
+  font-size: 65px;
+
+  font-weight: bold;
+
+  color: white;
+}
+
+.box p {
+
+  margin-top: 10px;
+
+  font-size: 24px;
+
+  color: #f1f1f1;
+}
+
+/* הודעה */
+#message {
+
+  margin-top: 35px;
+
+  font-size: 40px;
+
+  color: white;
+
+  font-weight: bold;
+}
+
+/* אינפוט */
+input {
+
+  margin-top: 40px;
+
+  width: 320px;
+
+  padding: 20px;
+
+  border: none;
+
+  border-radius: 18px;
+
+  font-size: 24px;
+
+  text-align: center;
+
+  color: white;
+
+  background:
+    rgba(255,192,203,0.2);
+
+  backdrop-filter: blur(10px);
+}
+
+input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+.startBtn {
+  margin-top: 25px;
+}
+
+/* טלפון */
+@media (max-width: 850px) {
+
+  h1 {
+    font-size: 42px;
+  }
+
+  .subtitle {
+    font-size: 22px;
+  }
+
+  .box {
+    width: 120px;
+    padding: 20px;
+  }
+
+  .box span {
+    font-size: 40px;
+  }
+
+  .box p {
+    font-size: 18px;
+  }
+
+  button {
+    font-size: 20px;
+    padding: 20px;
+  }
+
+  input {
+    width: 90%;
+  }
+
+}

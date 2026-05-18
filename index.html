@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>חופש גדול</title>
+    <link rel="stylesheet" href="./style.css">
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>לוח החופשים</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- מסך בית -->
+  <div id="homeScreen" class="screen active">
+
+    <div class="homeOverlay"></div>
+
+    <div class="homeContent">
+
+      <h1>🎉 לוח החופשים 🎉</h1>
+
+      <p class="subtitle">
+        👇 בחר חג או אירוע 👇
+      </p>
+
+      <div class="buttons">
+
+        <button onclick="openCountdown('summer')">
+          ☀️ החופש הגדול
+        </button>
+
+        <button onclick="openCountdown('purim')">
+          🎭 פורים
+        </button>
+
+        <button onclick="openCountdown('hanukkah')">
+          🕎 חנוכה
+        </button>
+
+        <button onclick="openCountdown('pesach')">
+          🍷 פסח
+        </button>
+
+        <button onclick="openCountdown('shavuot')">
+          🧀 שבועות
+        </button>
+
+        <button onclick="openCountdown('roshHashana')">
+          🍎 ראש השנה
+        </button>
+
+        <button onclick="openBirthday()">
+          🎂 יום הולדת
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- מסך יום הולדת -->
+  <div id="birthdayScreen" class="screen">
+
+    <div class="overlay pinkOverlay"></div>
+
+    <div class="content">
+
+      <button class="backBtn" onclick="goHome()">
+        ⬅ חזרה
+      </button>
+
+      <h1>🎂 הכנס תאריך יום הולדת 🎂</h1>
+
+      <input type="date" id="birthdayInput">
+
+      <button class="startBtn" onclick="startBirthdayCountdown()">
+        🚀 התחל ספירה
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- מסך ספירה -->
+  <div id="countdownScreen" class="screen">
+
+    <div class="overlay"></div>
+
+    <button class="backBtn" onclick="goHome()">
+      ⬅ חזרה
+    </button>
+
+    <div class="content">
+
+      <h1 id="eventTitle">אירוע</h1>
+
+      <div id="countdown">
+
+        <div class="box">
+          <span id="days">0</span>
+          <p>ימים</p>
+        </div>
+
+        <div class="box">
+          <span id="hours">0</span>
+          <p>שעות</p>
+        </div>
+
+        <div class="box">
+          <span id="minutes">0</span>
+          <p>דקות</p>
+        </div>
+
+        <div class="box">
+          <span id="seconds">0</span>
+          <p>שניות</p>
+        </div>
+
+      </div>
+
+      <p id="message"></p>
+
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
+    <script  src="./script.js"></script>
+
+  </body>
+  
+</html>

@@ -1,58 +1,69 @@
-
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="he" dir="rtl">
 
 <head>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <meta charset="UTF-8">
-    <title>לוח חופשים בישראל וספירה לאחור לחגים ותאריכים חשובים בשנה</title>
-    <meta name="description" content=" לוח חופשים בישראל וספירה לאחור לחגים ותאריכים חשובים בשנה">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>לוח החופשים</title>
+
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+  <button id="themeToggle">
+    🌙 מצב לילה
+  </button>
+
+  <div id="particles"></div>
+
   <!-- מסך בית -->
   <div id="homeScreen" class="screen active">
-
-    <div class="homeOverlay"></div>
 
     <div class="homeContent">
 
       <h1>🎉 לוח החופשים 🎉</h1>
 
       <p class="subtitle">
-        👇  בחר חג או אירוע כדי לראות עוד כמה זמן הוא מגיע 👇
+        👇 בחר חג או אירוע 👇
       </p>
 
       <div class="buttons">
 
         <button onclick="openCountdown('summer')">
-          ☀️ ?מתי החופש הגדול
+          ☀️ החופש הגדול
         </button>
 
         <button onclick="openCountdown('purim')">
-          🎭 ?מתי פורים
+          🎭 פורים
         </button>
 
         <button onclick="openCountdown('hanukkah')">
-          🕎 ?מתי חנוכה
+          🕎 חנוכה
         </button>
 
         <button onclick="openCountdown('pesach')">
-          🍷 ?מתי פסח
+          🍷 פסח
         </button>
 
         <button onclick="openCountdown('shavuot')">
-          🧀 ?מתי שבועות
+          🧀 שבועות
         </button>
 
         <button onclick="openCountdown('roshHashana')">
-          🍎 ?מתי ראש השנה
+          🍎 ראש השנה
+        </button>
+
+        <button onclick="openCountdown('sukkot')">
+          🌿 סוכות
         </button>
 
         <button onclick="openBirthday()">
-          🎂 ?מתי יום ההולדת שלך
+          🎂 יום הולדת
+        </button>
+
+        <button onclick="openShabbatCountdown()">
+          🕯️ שבת
         </button>
 
       </div>
@@ -76,7 +87,7 @@
 
       <input type="date" id="birthdayInput">
 
-      <button class="startBtn" onclick="startBirthdayCountdown()">
+      <button onclick="startBirthdayCountdown()">
         🚀 התחל ספירה
       </button>
 
@@ -121,6 +132,12 @@
 
       </div>
 
+      <div class="progressContainer" id="progressContainer">
+        <div id="progressBar"></div>
+      </div>
+
+      <p id="progressText"></p>
+
       <p id="message"></p>
 
     </div>
@@ -131,5 +148,3 @@
 
 </body>
 </html>
-
-

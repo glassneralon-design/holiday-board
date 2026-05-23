@@ -1,150 +1,230 @@
+<!-- ================= HTML ================= -->
+
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0">
+
   <title>לוח החופשים</title>
 
-  <link rel="stylesheet" href="style.css">
+  <link
+  rel="stylesheet"
+  href="style.css">
+
 </head>
 
 <body>
 
-  <button id="themeToggle">
-    🌙 מצב לילה
-  </button>
+<!-- חלקיקים -->
 
-  <div id="particles"></div>
+<div id="particles"></div>
 
-  <!-- מסך בית -->
-  <div id="homeScreen" class="screen active">
+<!-- טעינה -->
 
-    <div class="homeContent">
+<div id="loadingScreen" class="screen">
 
-      <h1>🎉 לוח החופשים 🎉</h1>
+  <div class="loadingText">
+    🚀 טוען...
+  </div>
 
-      <p class="subtitle">
-        👇 בחר חג או אירוע 👇
-      </p>
+  <div class="loadingBarContainer">
 
-      <div class="buttons">
+    <div id="loadingBar"></div>
 
-        <button onclick="openCountdown('summer')">
-          ☀️ החופש הגדול
-        </button>
+  </div>
 
-        <button onclick="openCountdown('purim')">
-          🎭 פורים
-        </button>
+</div>
 
-        <button onclick="openCountdown('hanukkah')">
-          🕎 חנוכה
-        </button>
+<!-- כפתורים עליונים -->
 
-        <button onclick="openCountdown('pesach')">
-          🍷 פסח
-        </button>
+<button id="themeToggle">
+🌙 מצב לילה
+</button>
 
-        <button onclick="openCountdown('shavuot')">
-          🧀 שבועות
-        </button>
+<button id="shabbatToggle">
+🌅 כניסת שבת
+</button>
 
-        <button onclick="openCountdown('roshHashana')">
-          🍎 ראש השנה
-        </button>
+<!-- בית -->
 
-        <button onclick="openCountdown('sukkot')">
-          🌿 סוכות
-        </button>
+<div id="homeScreen" class="screen active">
 
-        <button onclick="openBirthday()">
-          🎂 יום הולדת
-        </button>
+  <div class="homeContent">
 
-        <button onclick="openShabbatCountdown()">
-          🕯️ שבת
-        </button>
+    <h1>
+    📅 לוח החופשים
+    </h1>
 
-      </div>
+    <div class="subtitle">
+    בחר חג או אירוע
+    </div>
+
+    <div class="buttons">
+
+      <button onclick="openCountdown('summer')">
+      ☀️ החופש הגדול
+      </button>
+
+      <button onclick="openCountdown('purim')">
+      🎭 פורים
+      </button>
+
+      <button onclick="openCountdown('pesach')">
+      🍷 פסח
+      </button>
+
+      <button onclick="openCountdown('shavuot')">
+      🧀 שבועות
+      </button>
+
+      <button onclick="openCountdown('hanukkah')">
+      🕎 חנוכה
+      </button>
+
+      <button onclick="openCountdown('roshHashana')">
+      🍎 ראש השנה
+      </button>
+
+      <button onclick="openCountdown('sukkot')">
+      🌿 סוכות
+      </button>
+
+      <button onclick="openCountdown('yomHaatzmaut')">
+      🇮🇱 יום העצמאות
+      </button>
+
+      <button onclick="openShabbatCountdown()">
+      🕯️ שבת
+      </button>
+
+      <button onclick="openBirthday()">
+      🎂 יום הולדת
+      </button>
 
     </div>
 
   </div>
 
-  <!-- מסך יום הולדת -->
-  <div id="birthdayScreen" class="screen">
+</div>
 
-    <div class="overlay pinkOverlay"></div>
+<!-- ספירה -->
 
-    <div class="content">
+<div id="countdownScreen" class="screen">
 
-      <button class="backBtn" onclick="goHome()">
-        ⬅ חזרה
-      </button>
+  <div class="overlay"></div>
 
-      <h1>🎂 הכנס תאריך יום הולדת 🎂</h1>
+  <div class="content">
 
-      <input type="date" id="birthdayInput">
+    <button
+    class="backBtn"
+    onclick="goHome()">
 
-      <button onclick="startBirthdayCountdown()">
-        🚀 התחל ספירה
-      </button>
+    🔙 חזרה
 
-    </div>
-
-  </div>
-
-  <!-- מסך ספירה -->
-  <div id="countdownScreen" class="screen">
-
-    <div class="overlay"></div>
-
-    <button class="backBtn" onclick="goHome()">
-      ⬅ חזרה
     </button>
 
-    <div class="content">
+    <h1 id="eventTitle"></h1>
 
-      <h1 id="eventTitle">אירוע</h1>
+    <div id="countdown">
 
-      <div id="countdown">
+      <div class="box">
 
-        <div class="box">
-          <span id="days">0</span>
-          <p>ימים</p>
-        </div>
+        <span id="days">0</span>
 
-        <div class="box">
-          <span id="hours">0</span>
-          <p>שעות</p>
-        </div>
-
-        <div class="box">
-          <span id="minutes">0</span>
-          <p>דקות</p>
-        </div>
-
-        <div class="box">
-          <span id="seconds">0</span>
-          <p>שניות</p>
-        </div>
+        <p>ימים</p>
 
       </div>
 
-      <div class="progressContainer" id="progressContainer">
-        <div id="progressBar"></div>
+      <div class="box">
+
+        <span id="hours">0</span>
+
+        <p>שעות</p>
+
       </div>
 
-      <p id="progressText"></p>
+      <div class="box">
 
-      <p id="message"></p>
+        <span id="minutes">0</span>
+
+        <p>דקות</p>
+
+      </div>
+
+      <div class="box">
+
+        <span id="seconds">0</span>
+
+        <p>שניות</p>
+
+      </div>
+
+    </div>
+
+    <div
+    class="progressContainer"
+    id="progressContainer">
+
+      <div id="progressBar"></div>
+
+    </div>
+
+    <div id="progressText"></div>
+
+    <div id="message"></div>
+
+  </div>
+
+</div>
+
+<!-- יום הולדת -->
+
+<div id="birthdayScreen" class="screen">
+
+  <div class="overlay"></div>
+
+  <div class="content">
+
+    <button
+    class="backBtn"
+    onclick="goHome()">
+
+    🔙 חזרה
+
+    </button>
+
+    <div class="birthdayBox">
+
+      <h1>
+      🎂 יום הולדת
+      </h1>
+
+      <input
+      type="date"
+      id="birthdayInput">
+
+      <br><br>
+
+      <button
+      onclick="startBirthdayCountdown()">
+
+      🚀 התחל
+
+      </button>
 
     </div>
 
   </div>
 
-  <script src="script.js"></script>
+</div>
+
+<script src="script.js"></script>
 
 </body>
 </html>

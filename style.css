@@ -1,8 +1,12 @@
-
 *{
   margin:0;
   padding:0;
   box-sizing:border-box;
+}
+
+html{
+  height:100%;
+  overflow:hidden;
 }
 
 body{
@@ -10,9 +14,12 @@ body{
   overflow:hidden;
   direction:rtl;
   background:black;
+  margin:0;
+  height:100vh;
 }
 
 /* ================= מסכים ================= */
+
 .screen{
   display:none;
   width:100%;
@@ -26,10 +33,19 @@ body{
   align-items:center;
 }
 
-/* ================= בית ================= */
+/* ================= מסך הבית ================= */
+
 #homeScreen{
+
+  align-items:center;
+  justify-content:center;
+
   background:
-  linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.7)),
+  linear-gradient(
+  rgba(0,0,0,0.6),
+  rgba(0,0,0,0.75)
+  ),
+
   url("https://images.unsplash.com/photo-1513151233558-d860c5398176");
 
   background-size:cover;
@@ -46,6 +62,9 @@ h1{
   color:white;
   font-size:65px;
   margin-bottom:20px;
+
+  text-shadow:
+  0 0 25px rgba(255,255,255,0.6);
 }
 
 .subtitle{
@@ -55,151 +74,670 @@ h1{
 }
 
 /* ================= כפתורים ================= */
+
 .buttons{
+
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+  grid-template-columns:
+  repeat(auto-fit,minmax(220px,1fr));
+
   gap:25px;
+
   max-width:1200px;
+
   margin:auto;
 }
 
 button{
-  padding:22px;
-  border:none;
-  border-radius:25px;
-  font-size:22px;
-  cursor:pointer;
-  color:white;
-  transition:0.3s;
 
-  background:linear-gradient(135deg,rgba(255,255,255,0.2),rgba(255,105,180,0.2));
+  padding:22px;
+
+  border:none;
+
+  border-radius:25px;
+
+  font-size:22px;
+
+  cursor:pointer;
+
+  color:white;
+
+  transition:0.35s;
+
+  background:
+  linear-gradient(
+  135deg,
+  rgba(255,255,255,0.15),
+  rgba(255,105,180,0.25)
+  );
 
   backdrop-filter:blur(10px);
+
+  box-shadow:
+  0 0 15px rgba(255,255,255,0.15);
 }
 
 button:hover{
-  transform:translateY(-10px) scale(1.05);
+
+  transform:
+  translateY(-10px)
+  scale(1.06);
+
+  box-shadow:
+  0 0 25px rgba(255,105,180,0.7);
 }
 
-/* ================= כפתור מצב לילה ================= */
+/* ================= 🇮🇱 יום העצמאות ================= */
+
+.yomHaatzmautTheme{
+
+  background:
+  linear-gradient(
+  rgba(0,80,180,0.45),
+  rgba(255,255,255,0.1)
+  );
+
+  border:
+  2px solid rgba(255,255,255,0.4);
+
+  box-shadow:
+  0 0 25px rgba(0,120,255,0.7),
+  0 0 50px rgba(255,255,255,0.3);
+
+  animation:
+  israelGlow 3s infinite alternate;
+}
+
+@keyframes israelGlow{
+
+  from{
+
+    box-shadow:
+    0 0 20px rgba(0,120,255,0.5),
+    0 0 40px rgba(255,255,255,0.2);
+  }
+
+  to{
+
+    box-shadow:
+    0 0 35px rgba(0,150,255,1),
+    0 0 60px rgba(255,255,255,0.5);
+  }
+}
+
+/* ================= מצב יום/לילה ================= */
+
 #themeToggle{
+
   position:fixed;
+
   top:20px;
   left:20px;
-  z-index:999;
+
+  z-index:9999;
 }
 
-/* ================= מצב לילה בסיסי ================= */
-body.darkMode{
-  background:#070a12;
+#shabbatToggle{
+
+  position:fixed;
+
+  top:20px;
+  left:220px;
+
+  z-index:9999;
+
+  display:none;
+
+  background:
+  linear-gradient(
+  135deg,
+  rgba(0,120,255,0.4),
+  rgba(255,255,255,0.2)
+  );
+
+  box-shadow:
+  0 0 20px rgba(0,120,255,0.8);
 }
 
-/* ================= מסכים בלילה ================= */
-body.darkMode #homeScreen,
-body.darkMode #countdownScreen,
-body.darkMode #birthdayScreen{
-  filter:brightness(0.75) contrast(1.1);
+.darkMode{
+
+  background:black;
 }
 
-/* ================= כפתורים זוהרים בלילה ================= */
-body.darkMode button{
-  background:linear-gradient(135deg,#00c6ff,#7b2ff7);
+.darkMode button{
+
+  background:
+  linear-gradient(
+  135deg,
+  rgba(255,0,150,0.35),
+  rgba(0,255,255,0.25)
+  );
+
+  box-shadow:
+  0 0 20px rgba(255,105,180,0.8),
+  0 0 40px rgba(0,255,255,0.4);
+
+  border:
+  1px solid rgba(255,255,255,0.2);
+}
+
+.darkMode button:hover{
+
+  transform:
+  scale(1.08)
+  translateY(-8px);
+
+  box-shadow:
+  0 0 35px #ff69b4,
+  0 0 60px cyan;
+}
+
+/* ================= מסכי ספירה ================= */
+
+#countdownScreen,
+#birthdayScreen{
+
+  background-size:cover;
+  background-position:center;
+}
+
+/* ================= שכבת כהות ================= */
+
+.overlay{
+
+  position:absolute;
+
+  width:100%;
+  height:100%;
+
+  background:
+  linear-gradient(
+  rgba(0,0,0,0.55),
+  rgba(0,0,0,0.82)
+  );
+}
+
+/* ================= שכבה ורודה ================= */
+
+.pinkOverlay{
+
+  background:
+  linear-gradient(
+  rgba(255,105,180,0.3),
+  rgba(0,0,0,0.7)
+  );
+}
+
+/* ================= תוכן ================= */
+
+.content{
+
+  position:relative;
+
+  z-index:2;
+
+  text-align:center;
+
+  width:100%;
+}
+
+/* ================= 🎂 מסך יום הולדת ================= */
+
+#birthdayScreen .content{
+
+  position:relative;
+
+  z-index:2;
+
+  text-align:center;
+
+  width:90%;
+  max-width:700px;
+
+  padding:50px;
+
+  border-radius:35px;
+
+  overflow:hidden;
+
+  background:
+  linear-gradient(
+  135deg,
+  rgba(255,105,180,0.25),
+  rgba(255,20,147,0.18)
+  );
+
+  border:
+  2px solid rgba(255,255,255,0.25);
+
+  backdrop-filter:blur(18px);
+
+  box-shadow:
+  0 0 25px rgba(255,105,180,0.7),
+  0 0 50px rgba(255,20,147,0.5),
+  0 0 80px rgba(255,182,193,0.3);
+
+  animation:
+  birthdayGlow 3s infinite alternate;
+}
+
+/* ✨ זוהר */
+
+@keyframes birthdayGlow{
+
+  from{
+
+    box-shadow:
+    0 0 20px rgba(255,105,180,0.5),
+    0 0 40px rgba(255,20,147,0.4);
+  }
+
+  to{
+
+    box-shadow:
+    0 0 35px rgba(255,105,180,1),
+    0 0 70px rgba(255,20,147,0.8),
+    0 0 100px rgba(255,182,193,0.5);
+  }
+}
+
+/* ✨ נצנצים */
+
+#birthdayScreen .content::before{
+
+  content:"";
+
+  position:absolute;
+
+  top:0;
+  left:0;
+
+  width:100%;
+  height:100%;
+
+  border-radius:35px;
+
+  background:
+  radial-gradient(
+  white 1px,
+  transparent 1px
+  );
+
+  background-size:
+  25px 25px;
+
+  opacity:0.25;
+
+  animation:
+  sparkleMove 12s linear infinite;
+
+  pointer-events:none;
+}
+
+@keyframes sparkleMove{
+
+  from{
+    background-position:0 0;
+  }
+
+  to{
+    background-position:300px 300px;
+  }
+}
+
+/* ================= אינפוט יום הולדת ================= */
+
+#birthdayInput{
+
+  width:80%;
+
+  padding:18px;
+
+  border:none;
+
+  border-radius:20px;
+
+  margin-top:25px;
+
+  font-size:22px;
+
+  text-align:center;
+
+  background:
+  rgba(255,255,255,0.18);
+
   color:white;
 
-  border:1px solid rgba(255,255,255,0.1);
-
-  box-shadow:
-    0 0 12px rgba(0,198,255,0.6),
-    0 0 25px rgba(123,47,247,0.6);
-}
-
-/* hover בלילה */
-body.darkMode button:hover{
-  transform:translateY(-10px) scale(1.08);
-
-  box-shadow:
-    0 0 25px rgba(0,198,255,0.9),
-    0 0 50px rgba(123,47,247,0.9);
-}
-
-/* ================= טקסטים בלילה ================= */
-body.darkMode h1,
-body.darkMode .subtitle,
-body.darkMode #message,
-body.darkMode .box span,
-body.darkMode .box p{
-  text-shadow:0 0 10px rgba(255,255,255,0.25);
-}
-
-/* ================= קופסאות ================= */
-.box{
-  width:170px;
-  padding:30px;
-  border-radius:30px;
-  background:rgba(255,255,255,0.15);
   backdrop-filter:blur(10px);
+
+  box-shadow:
+  0 0 15px rgba(255,105,180,0.5);
 }
 
-body.darkMode .box{
-  background:rgba(255,255,255,0.08);
-  border:1px solid rgba(255,255,255,0.1);
+#birthdayInput::placeholder{
+
+  color:
+  rgba(255,255,255,0.8);
 }
 
-/* ================= ספירה ================= */
+/* ================= כפתור יום הולדת ================= */
+
+#birthdayScreen button{
+
+  margin-top:25px;
+
+  background:
+  linear-gradient(
+  135deg,
+  #ff69b4,
+  #ff1493
+  );
+
+  box-shadow:
+  0 0 20px rgba(255,20,147,0.7);
+}
+
+#birthdayScreen button:hover{
+
+  transform:
+  scale(1.08)
+  translateY(-6px);
+
+  box-shadow:
+  0 0 35px rgba(255,20,147,1),
+  0 0 60px rgba(255,182,193,0.8);
+}
+
+/* ================= כפתור חזרה ================= */
+
+.backBtn{
+
+  position:absolute;
+
+  top:20px;
+  right:20px;
+
+  z-index:99999;
+}
+
+/* ================= טיימר ================= */
+
 #countdown{
+
   display:flex;
+
   direction:ltr;
+
   justify-content:center;
+
   gap:30px;
+
   flex-wrap:wrap;
+
   margin-top:50px;
 }
 
+/* ================= קופסאות זמן ================= */
+
+.box{
+
+  width:170px;
+
+  padding:30px;
+
+  border-radius:30px;
+
+  background:
+  rgba(0,0,0,0.65);
+
+  border:
+  2px solid rgba(255,255,255,0.15);
+
+  backdrop-filter:blur(10px);
+
+  box-shadow:
+  0 0 25px rgba(0,0,0,0.7);
+
+  transition:0.3s;
+}
+
+.box:hover{
+
+  transform:
+  scale(1.08);
+
+  box-shadow:
+  0 0 30px rgba(255,255,255,0.35);
+}
+
 .box span{
+
   font-size:60px;
+
   color:white;
+
   font-weight:bold;
 }
 
 .box p{
+
   margin-top:10px;
+
   color:white;
+
   font-size:24px;
 }
 
-/* ================= פרוגרס ================= */
-.progressContainer{
-  width:80%;
-  max-width:700px;
-  height:35px;
-  margin:40px auto;
-  border-radius:50px;
-  overflow:hidden;
-  background:rgba(255,255,255,0.2);
-}
+/* ================= פס התקדמות ================= */
 
-body.darkMode .progressContainer{
-  background:rgba(255,255,255,0.1);
+.progressContainer{
+
+  width:80%;
+
+  max-width:700px;
+
+  height:35px;
+
+  margin:40px auto;
+
+  border-radius:50px;
+
+  overflow:hidden;
+
+  background:
+  rgba(255,255,255,0.2);
 }
 
 #progressBar{
-  width:0%;
-  height:100%;
-  background:linear-gradient(90deg,#ff69b4,#ffd700);
-}
 
-body.darkMode #progressBar{
-  background:linear-gradient(90deg,#00c6ff,#7b2ff7);
+  width:0%;
+
+  height:100%;
+
+  background:
+  linear-gradient(
+  90deg,
+  #ff69b4,
+  #ffd700,
+  #00ffff
+  );
+
+  box-shadow:
+  0 0 20px #ff69b4;
+
+  transition:0.2s;
 }
 
 #progressText{
+
   color:white;
+
   font-size:24px;
+
+  text-shadow:
+  0 0 15px rgba(255,255,255,0.5);
 }
 
-/* ================= הודעה ================= */
+/* ================= הודעות ================= */
+
 #message{
+
   margin-top:30px;
+
   color:white;
+
   font-size:36px;
+
+  text-shadow:
+  0 0 20px rgba(255,255,255,0.5);
+}
+
+/* ================= מסך טעינה ================= */
+
+#loadingScreen{
+
+  position:fixed;
+
+  top:0;
+  left:0;
+
+  width:100%;
+  height:100vh;
+
+  display:none;
+
+  justify-content:center;
+  align-items:center;
+
+  background:
+  rgba(0,0,0,0.85);
+
+  z-index:99999;
+}
+
+#loadingScreen.active{
+  display:flex;
+}
+
+.loadingBox{
+
+  width:350px;
+
+  padding:35px;
+
+  border-radius:30px;
+
+  background:
+  rgba(255,255,255,0.1);
+
+  backdrop-filter:blur(15px);
+
+  text-align:center;
+
+  box-shadow:
+  0 0 30px rgba(255,105,180,0.6);
+}
+
+.loadingBox h2{
+
+  color:white;
+
+  font-size:35px;
+
+  margin-bottom:25px;
+}
+
+.loadingContainer{
+
+  width:100%;
+
+  height:28px;
+
+  border-radius:50px;
+
+  overflow:hidden;
+
+  background:
+  rgba(255,255,255,0.2);
+}
+
+#loadingBar{
+
+  width:0%;
+
+  height:100%;
+
+  border-radius:50px;
+
+  transition:0.2s;
+
+  background:
+  linear-gradient(
+  90deg,
+  #ff69b4,
+  #ffd700,
+  #00ffff
+  );
+
+  box-shadow:
+  0 0 20px #ff69b4;
+}
+
+/* ================= חלקיקים ================= */
+
+#particles{
+
+  position:fixed;
+
+  width:100%;
+  height:100%;
+
+  top:0;
+  left:0;
+
+  pointer-events:none;
+
+  overflow:hidden;
+
+  z-index:1;
+}
+
+.particle{
+
+  position:absolute;
+
+  bottom:-20px;
+
+  width:12px;
+  height:12px;
+
+  border-radius:50%;
+
+  background:
+  rgba(255,255,255,0.7);
+
+  animation:
+  floatUp linear forwards;
+}
+
+@keyframes floatUp{
+
+  from{
+
+    transform:
+    translateY(0)
+    scale(1);
+
+    opacity:1;
+  }
+
+  to{
+
+    transform:
+    translateY(-120vh)
+    scale(0);
+
+    opacity:0;
+  }
 }

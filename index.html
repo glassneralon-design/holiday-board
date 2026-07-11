@@ -1,230 +1,3050 @@
-<!-- ================= HTML ================= -->
-
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
-
 <head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>לוח החופשים עם בר מצווה וספירה לפרשה</title>
+<style>
+  /* בסיס */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  html {
+    height: 100%;
+  }
+  html,
+  body {
+    width: 100%;
+    min-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    font-family: Arial, sans-serif;
+    direction: rtl;
+    transition: background 1.8s ease;
+    background:
+      linear-gradient(rgba(10, 0, 30, 0.82), rgba(20, 0, 50, 0.96)),
+      url("https://images.unsplash.com/photo-1519608487953-e999c86e7455") center / cover no-repeat;
+    color: #ffd700;
+    text-shadow: 0 0 12px rgba(255,215,0,0.5), 0 0 25px rgba(180,0,255,0.3);
+    position: relative;
+  }
+  body.lightMode {
+    background:
+      linear-gradient(rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.15)),
+      url("https://images.unsplash.com/photo-1506744038136-46273834b3fb") center / cover no-repeat;
+    color: #222;
+    text-shadow: 0 0 15px rgba(255,180,0,0.4);
+  }
+  .screen {
+    display: none;
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+    z-index: 1;
+  }
+  .active {
+    display: flex;
+  }
+  h1 {
+    font-size: 75px;
+    margin-bottom: 20px;
+    color: inherit;
+    z-index: 2;
+  }
+  .buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    width: 90%;
+    max-width: 1200px;
+    z-index: 2;
+  }
+  button {
+    padding: 22px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: 0.35s;
+    backdrop-filter: blur(14px);
+    overflow: hidden;
+    color: inherit;
+    background:
+      linear-gradient(
+        135deg,
+        rgba(140, 0, 255, 0.45),
+        rgba(80, 0, 180, 0.3)
+      );
+    box-shadow: 0 0 18px rgba(140,0,255,0.5);
+    user-select: none;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+  body.lightMode button {
+    background:
+      linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.75),
+        rgba(255, 215, 0, 0.35)
+      );
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+    color: #222;
+  }
+  button:hover {
+    transform: scale(1.07);
+    box-shadow: 0 0 35px rgba(160,0,255,0.7), 0 0 60px rgba(100,0,200,0.4);
+  }
+  .list-container {
+    width: 90%;
+    max-width: 700px;
+    background: rgba(0, 0, 30, 0.7);
+    border-radius: 20px;
+    padding: 20px;
+    max-height: 60vh;
+    overflow-y: auto;
+    color: inherit;
+    z-index: 2;
+    position: relative;
+  }
+  .list-item {
+    padding: 12px 20px;
+    margin: 8px 0;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 15px;
+    font-size: 22px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  body.lightMode .list-container {
+    background: rgba(255, 215, 0, 0.15);
+  }
+  body.lightMode .list-item {
+    background: rgba(0, 0, 0, 0.05);
+    color: #222;
+  }
+  .list-item:hover {
+    background: rgba(255, 215, 0, 0.5);
+  }
+  .backBtn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 215, 0, 0.3);
+    color: #222;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 24px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 15px #ffd700;
+    transition: 0.3s;
+    user-select: none;
+    z-index: 10;
+  }
+  .backBtn:hover {
+    background: rgba(255, 215, 0, 0.6);
+  }
+  #countdown {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin-top: 50px;
+    direction: ltr;
+    flex-wrap: wrap;
+    z-index: 2;
+    position: relative;
+  }
+  .box {
+    width: 140px;
+    padding: 25px;
+    border-radius: 30px;
+    cursor: default;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    transition: 0.35s;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+    color: white;
+    user-select: none;
+    text-align: center;
+    z-index: 2;
+    position: relative;
+  }
+  body.lightMode .box {
+    background: rgba(255, 255, 255, 0.45);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+    color: #222;
+  }
+  .box span {
+    font-size: 48px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+  }
+  #progressContainer {
+    width: 80%;
+    max-width: 700px;
+    height: 36px;
+    margin: 40px auto;
+    border-radius: 50px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.15);
+    position: relative;
+    z-index: 2;
+  }
+  body.lightMode #progressContainer {
+    background: rgba(255, 215, 0, 0.15);
+  }
+  #progressBar {
+    width: 0%;
+    height: 100%;
+    transition: 0.25s;
+    background: linear-gradient(90deg, #ff69b4, #ffd700, cyan);
+    box-shadow: 0 0 25px #ff69b4;
+  }
+  #progressText {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 22px;
+    color: white;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    position: relative;
+    z-index: 2;
+  }
+  body.lightMode #progressText {
+    color: #222;
+  }
+  #message {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 32px;
+    color: white;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    position: relative;
+    z-index: 2;
+  }
+  body.lightMode #message {
+    color: #222;
+  }
+  #themeToggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 9999;
+  }
+  #shabbatToggle {
+    position: fixed;
+    top: 70px;
+    left: 20px;
+    z-index: 9999;
+    background:
+      linear-gradient(135deg, rgba(255, 215, 0, 0.8), rgba(255, 255, 255, 0.1));
+    border: none;
+    border-radius: 30px;
+    padding: 12px 25px;
+    cursor: pointer;
+    font-size: 20px;
+    color: inherit;
+    box-shadow: 0 0 20px #ffd700;
+  }
+  #shabbatToggle:hover {
+    transform: scale(1.07);
+    box-shadow: 0 0 45px #fffacd;
+  }
+  #birthdayScreen {
+    background:
+      linear-gradient(rgba(255,105,180,0.25), rgba(255,20,147,0.18)),
+      url("https://images.unsplash.com/photo-1464349095431-e9a21285b5f3") center/cover no-repeat;
+  }
+  #birthdayScreen .content {
+    width: 90%;
+    max-width: 700px;
+    padding: 50px;
+    border-radius: 40px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 30px rgba(255, 20, 147, 0.8);
+    background: rgba(255, 105, 180, 0.15);
+    color: white;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+  #birthdayInput {
+    width: 80%;
+    padding: 18px;
+    border: none;
+    border-radius: 20px;
+    margin-top: 25px;
+    text-align: center;
+    font-size: 22px;
+    color: white;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 18px rgba(255, 105, 180, 0.6);
+  }
+  #birthdayInput::placeholder {
+    color: white;
+  }
+  #birthdayScreen button {
+    margin-top: 20px;
+    background:
+      linear-gradient(135deg, rgba(255, 215, 0, 0.8), rgba(255, 255, 255, 0.15));
+    border: none;
+    border-radius: 30px;
+    padding: 15px 30px;
+    color: #ffd700;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0 0 20px #ffd700;
+    transition: 0.3s;
+  }
+  #birthdayScreen button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 40px #fffacd;
+  }
+  #chooseProgramScreen .buttons {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 600px;
+  }
+  #chooseProgramScreen button {
+    font-weight: bold;
+    font-size: 22px;
+    padding: 25px 20px;
+    color: white;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #ff6a9e, #fbc531);
+    box-shadow: 0 4px 15px rgba(251, 197, 49, 0.8), inset 0 -3px 5px rgba(251, 197, 49, 0.9);
+    backdrop-filter: blur(12px);
+    transition: 0.4s;
+    user-select: none;
+  }
+  #chooseProgramScreen button:hover {
+    filter: brightness(1.15);
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(251, 197, 49, 1), inset 0 -3px 7px rgba(251, 197, 49, 1);
+  }
+  #chooseProgramScreen button:nth-child(1) {
+    font-size: 26px;
+    padding: 28px 25px;
+    background: linear-gradient(135deg, #ff789b, #f9c74f);
+  }
+  #chooseProgramScreen button:nth-child(2) {
+    font-size: 24px;
+    padding: 26px 22px;
+    background: linear-gradient(135deg, #ff8aad, #fadb65);
+  }
+  #chooseProgramScreen button:nth-child(3) {
+    font-size: 22px;
+    padding: 25px 20px;
+    background: linear-gradient(135deg, #ffa8bf, #fce87f);
+  }
+  #stars, #fallingStars {
+    pointer-events: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 0;
+    overflow: visible;
+  }
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: twinkle 2s infinite ease-in-out alternate;
+  }
+  .star.small {
+    width: 2px;
+    height: 2px;
+  }
+  .star.medium {
+    width: 3px;
+    height: 3px;
+    animation-duration: 3s;
+  }
+  .star.large {
+    width: 4px;
+    height: 4px;
+    animation-duration: 4s;
+  }
+  @keyframes twinkle {
+    0% {opacity: 0.2;}
+    100% {opacity: 1;}
+  }
+  .falling-star {
+    position: absolute;
+    width: 3px;
+    height: 80px;
+    background: linear-gradient(45deg, white, rgba(255,255,255,0));
+    border-radius: 50%;
+    opacity: 0.9;
+    animation-name: falling;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+  @keyframes falling {
+    0% {
+      transform: translateY(-100px) translateX(0) rotate(45deg);
+      opacity: 0.9;
+    }
+    100% {
+      transform: translateY(100vh) translateX(-100px) rotate(45deg);
+      opacity: 0;
+    }
+  }
+  /* שדה חיפוש סינון מהיר */
+  #filterParashotInput {
+    width: 90%;
+    max-width: 700px;
+    padding: 15px 20px;
+    border-radius: 25px;
+    font-size: 22px;
+    margin: 0 0 15px 0;
+    border: none;
+    outline: none;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.7);
+    text-align: center;
+  }
 
-  <meta charset="UTF-8">
+  #splashScreen {
+    position:fixed; inset:0; z-index:999999;
+    background:linear-gradient(135deg,rgba(0,0,20,.97),rgba(0,0,40,.99));
+    display:flex; flex-direction:column; justify-content:center; align-items:center;
+    transition:opacity .6s ease;
+  }
+  #splashScreen.fade-out { opacity:0; pointer-events:none; }
+  .splash-title { font-size:64px; color:#ffd700; text-shadow:0 0 30px #ffd700,0 0 60px #ffea00; margin-bottom:10px; animation:splashPulse 1.5s ease-in-out infinite alternate; }
+  .splash-subtitle { font-size:24px; color:rgba(255,215,0,.7); margin-bottom:50px; letter-spacing:2px; }
+  .splash-bar-container { width:320px; height:10px; background:rgba(255,255,255,.1); border-radius:50px; overflow:hidden; }
+  .splash-bar { height:100%; width:0%; background:linear-gradient(90deg,#ff69b4,#ffd700,cyan); box-shadow:0 0 15px #ffd700; border-radius:50px; transition:width .05s linear; }
+  .splash-percent { margin-top:15px; font-size:18px; color:rgba(255,215,0,.6); }
+  @keyframes splashPulse {
+    from { text-shadow:0 0 20px #ffd700,0 0 40px #ffea00; }
+    to   { text-shadow:0 0 40px #ffd700,0 0 80px #ffea00,0 0 120px cyan; }
+  }
+  /* ===== לוח שנה ===== */
+  #calendarToggle { position:fixed; top:20px; right:20px; z-index:9999; font-size:14px !important; padding:10px 16px !important; border-radius:18px !important; }
+  #calendarOverlay { position:fixed; inset:0; z-index:99998; display:none; }
+  #calendarOverlay.active { display:block; }
+  #calendarBox {
+    position:relative; background:rgba(10,10,30,.98); backdrop-filter:blur(20px);
+    width:100%; height:100%; padding:40px; overflow-y:auto;
+    color:white; text-align:center; display:flex; flex-direction:column;
+  }
+  #calendarBox::-webkit-scrollbar { width:6px; }
+  #calendarBox::-webkit-scrollbar-thumb { background:#ffd700; border-radius:10px; }
+  .cal-close {
+    position:absolute; top:20px; right:20px; z-index:10;
+    background:rgba(255,100,100,.2); border:1px solid rgba(255,100,100,.4);
+    color:white; font-size:15px; padding:10px 18px; border-radius:20px; cursor:pointer; transition:.2s;
+  }
+  .cal-close:hover { background:rgba(255,100,100,.4); }
+  .cal-header { display:flex; justify-content:space-between; align-items:center; margin:60px 0 25px; }
+  .cal-header h2 { font-size:26px; color:#ffd700; text-shadow:0 0 15px #ffd700; }
+  .cal-nav {
+    background:none; border:1px solid rgba(255,215,0,.4); color:#ffd700;
+    font-size:20px; width:40px; height:40px; border-radius:50%;
+    cursor:pointer; padding:0; transition:.2s;
+  }
+  .cal-nav:hover { background:rgba(255,215,0,.2); box-shadow:0 0 15px #ffd700; transform:scale(1.1); }
+  .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:10px; }
+  .cal-day-name { font-size:13px; color:rgba(255,215,0,.6); padding:5px 0; font-weight:bold; }
+  .cal-day {
+    aspect-ratio:1; display:flex; flex-direction:column; justify-content:center;
+    align-items:center; border-radius:12px; font-size:15px; cursor:pointer; transition:.2s;
+  }
+  .cal-day:hover { background:rgba(255,255,255,.08); }
+  .cal-day.empty { cursor:default; pointer-events:none; }
+  .cal-day.today { background:linear-gradient(135deg,#ff69b4,#ffd700); color:#000; font-weight:bold; box-shadow:0 0 15px #ffd700; border-radius:50%; }
+  .cal-day.has-parasha { border:1px solid rgba(0,255,255,.4); }
+  .cal-day.has-parasha:hover { background:rgba(0,255,255,.15); }
+  .parasha-dot { width:5px; height:5px; background:cyan; border-radius:50%; margin-top:2px; }
+  .cal-parasha-label { font-size:9px; color:cyan; line-height:1; margin-top:1px; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  #calCountdownResult {
+    margin-top:25px; font-size:20px; color:#ffd700;
+    background:rgba(255,215,0,.08); border-radius:16px; padding:15px;
+    display:none; text-shadow:0 0 15px rgba(255,215,0,.5);
+  }
+  #calCountdownResult.visible { display:block; }
 
-  <meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0">
 
-  <title>לוח החופשים</title>
+  #tipBox {
+    position: relative;
+    background: linear-gradient(135deg, rgba(20,10,40,0.97), rgba(40,10,60,0.97));
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,215,0,0.3);
+    border-radius: 30px;
+    padding: 45px 40px 35px;
+    width: 90%;
+    max-width: 480px;
+    text-align: center;
+    box-shadow: 0 0 50px rgba(255,215,0,0.3), 0 0 100px rgba(255,105,180,0.15);
+    animation: tipPop 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+  }
+  @keyframes tipPop {
+    from { transform: scale(0.7); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+  .tip-icon { font-size: 52px; margin-bottom: 12px; }
+  #tipBox h2 { color: #ffd700; font-size: 22px; margin-bottom: 20px; text-shadow: 0 0 15px #ffd700; }
+  #tipText {
+    color: white; font-size: 20px; line-height: 1.7;
+    background: rgba(255,255,255,0.06); border-radius: 16px;
+    padding: 18px 20px; margin-bottom: 25px;
+    text-shadow: 0 0 8px rgba(255,255,255,0.2);
+  }
+  #tipNew {
+    background: linear-gradient(135deg, rgba(255,105,180,0.3), rgba(0,255,255,0.2));
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white; font-size: 17px; padding: 12px 28px;
+    border-radius: 20px; cursor: pointer; transition: 0.25s;
+  }
+  #tipNew:hover { transform: scale(1.05); box-shadow: 0 0 20px #ff69b4; }
+  #tipClose {
+    position: absolute; top: 15px; right: 18px;
+    background: rgba(255,100,100,0.2); border: 1px solid rgba(255,100,100,0.4);
+    color: white; font-size: 16px; padding: 6px 13px;
+    border-radius: 15px; cursor: pointer; transition: 0.2s;
+  }
+  #tipClose:hover { background: rgba(255,100,100,0.5); }
 
-  <link
-  rel="stylesheet"
-  href="style.css">
 
+  #tipToggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    font-size: 13px !important;
+    padding: 9px 14px !important;
+    border-radius: 18px !important;
+    display: none;
+  }
+
+
+  /* ===== פרופיל ===== */
+  #profileScreen input {
+    width: 100%;
+    padding: 16px;
+    margin: 10px 0;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.07);
+    color: white;
+    font-size: 18px;
+    text-align: center;
+  }
+  #profileScreen input::placeholder { color: rgba(255,255,255,0.5); }
+  #profileScreen label {
+    display: block;
+    font-size: 16px;
+    margin-top: 15px;
+    opacity: 0.8;
+  }
+  #profileSave {
+    margin-top: 25px;
+    padding: 14px 35px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: linear-gradient(135deg, rgba(140,0,255,0.45), rgba(80,0,180,0.3));
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  #profileSave:hover { box-shadow: 0 0 25px rgba(160,0,255,0.7); }
+  #profileResult {
+    margin-top: 25px;
+    font-size: 18px;
+    color: #ffd700;
+    background: rgba(255,215,0,0.08);
+    border-radius: 16px;
+    padding: 15px;
+    display: none;
+    line-height: 1.6;
+  }
+  #profileResult.visible { display: block; }
+
+
+  /* ===== תפריטי משחקים ===== */
+  #gamesMenuScreen .content, #gameTopicScreen .content {
+    width: 90%;
+    max-width: 600px;
+    background: rgba(10,10,30,0.7);
+    backdrop-filter: blur(15px);
+    border-radius: 30px;
+    padding: 40px;
+    text-align: center;
+  }
+  .games-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 25px;
+  }
+  .games-buttons button {
+    font-size: 22px;
+    padding: 22px;
+  }
+
+  /* ===== זיכרון ===== */
+  #memoryScreen .content {
+    width: 95%;
+    max-width: 600px;
+    text-align: center;
+  }
+  .memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 20px auto;
+    max-width: 480px;
+  }
+  .memory-card {
+    aspect-ratio: 1;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(140,0,255,0.45), rgba(80,0,180,0.3));
+    border: 1px solid rgba(255,255,255,0.15);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    cursor: pointer;
+    transition: 0.25s;
+    user-select: none;
+  }
+  .memory-card.flipped {
+    background: rgba(255,215,0,0.25);
+    border-color: #ffd700;
+  }
+  .memory-card.matched {
+    background: rgba(0,255,100,0.25);
+    border-color: #00ff64;
+    cursor: default;
+  }
+  .memory-card .symbol { display: none; }
+  .memory-card.flipped .symbol, .memory-card.matched .symbol { display: block; }
+  .memory-info {
+    font-size: 20px;
+    color: #ffd700;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px rgba(255,215,0,0.5);
+  }
+
+  /* ===== סולמות ונחשים ===== */
+  #snakesScreen .content {
+    width: 95%;
+    max-width: 750px;
+    text-align: center;
+  }
+  .snakes-board {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    gap: 2px;
+    width: 100%;
+    max-width: 700px;
+    aspect-ratio: 1;
+    margin: 20px auto;
+    border: 2px solid rgba(255,215,0,0.4);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .snakes-cell {
+    background: rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    position: relative;
+  }
+  .snakes-cell.ladder { background: rgba(0,255,90,0.45); box-shadow: inset 0 0 12px rgba(0,255,90,0.6); border: 1px solid rgba(0,255,90,0.7); }
+  .snakes-cell.snake { background: rgba(255,0,60,0.45); box-shadow: inset 0 0 12px rgba(255,0,60,0.6); border: 1px solid rgba(255,0,60,0.7); }
+  .snakes-cell .cell-num { font-size: 12px; opacity: 0.5; position: absolute; top:3px; right:4px;}
+  .snakes-cell .cell-arrow { font-size: 9px; opacity: 0.85; font-weight: bold; }
+  .snakes-cell .player-token {
+    font-size: 30px;
+    animation: tokenPop 0.3s ease;
+  }
+  @keyframes tokenPop { from{transform:scale(0.5);} to{transform:scale(1);} }
+  .snakes-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 15px;
+  }
+  #snakesDice {
+    font-size: 50px;
+    background: linear-gradient(135deg, rgba(140,0,255,0.45), rgba(80,0,180,0.3));
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 16px;
+    padding: 10px 25px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  #snakesDice:hover { box-shadow: 0 0 25px rgba(160,0,255,0.7); }
+  #snakesQuestion {
+    background: rgba(255,215,0,0.08);
+    border-radius: 16px;
+    padding: 15px;
+    font-size: 18px;
+    display: none;
+    width: 100%;
+  }
+  #snakesQuestion.visible { display: block; }
+  #snakesMessage {
+    font-size: 20px;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255,215,0,0.5);
+    min-height: 30px;
+  }
+
+
+  /* ===== טריוויה - תיבות תשובה ===== */
+  .trivia-question {
+    font-size: 26px;
+    margin-bottom: 30px;
+    line-height: 1.5;
+  }
+  .trivia-options {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .trivia-option {
+    padding: 22px;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.06);
+    cursor: pointer;
+    font-size: 20px;
+    transition: 0.25s;
+    text-align: right;
+  }
+  .trivia-option .opt-prefix {
+    color: #ffd700;
+    font-weight: bold;
+    margin-left: 8px;
+  }
+  .trivia-option:hover { background: rgba(255,255,255,0.15); transform: scale(1.02); }
+  .trivia-option.correct {
+    background: rgba(0,255,100,0.3) !important;
+    border-color: #00ff64 !important;
+    color: #fff;
+  }
+  .trivia-option.wrong {
+    background: rgba(255,0,80,0.3) !important;
+    border-color: #ff0050 !important;
+    color: #fff;
+  }
+  .trivia-score {
+    font-size: 22px;
+    color: #ffd700;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(255,215,0,0.5);
+  }
+  .trivia-next {
+    margin-top: 25px;
+    padding: 14px 35px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: linear-gradient(135deg, rgba(140,0,255,0.45), rgba(80,0,180,0.3));
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    display: none;
+  }
+  .trivia-next:hover { box-shadow: 0 0 25px rgba(160,0,255,0.7); }
+
+
+  /* ===== הגדרת שחקנים ===== */
+  #playerSetupScreen .content {
+    width: 90%;
+    max-width: 500px;
+    background: rgba(10,10,30,0.7);
+    backdrop-filter: blur(15px);
+    border-radius: 30px;
+    padding: 40px;
+    text-align: center;
+  }
+  #playerCountRow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin: 20px 0 25px;
+  }
+  #playerCountRow button {
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    font-size: 24px;
+    border-radius: 50%;
+  }
+  #playerCountDisplay {
+    font-size: 30px;
+    color: #ffd700;
+    min-width: 50px;
+    text-shadow: 0 0 10px rgba(255,215,0,0.5);
+  }
+  .player-name-input {
+    width: 100%;
+    padding: 14px;
+    margin: 8px 0;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.07);
+    color: white;
+    font-size: 17px;
+    text-align: center;
+  }
+  .player-name-input::placeholder { color: rgba(255,255,255,0.5); }
+  #playerSetupStart {
+    margin-top: 20px;
+    padding: 16px 40px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: linear-gradient(135deg, rgba(140,0,255,0.45), rgba(80,0,180,0.3));
+    color: white;
+    font-size: 19px;
+    cursor: pointer;
+  }
+  #playerSetupStart:hover { box-shadow: 0 0 25px rgba(160,0,255,0.7); }
+  /* ===== טבלת ניקוד שחקנים ===== */
+  .players-scores {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  .player-score-chip {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 14px;
+    padding: 8px 16px;
+    font-size: 15px;
+  }
+  .player-score-chip.active {
+    background: rgba(255,215,0,0.25);
+    border-color: #ffd700;
+    box-shadow: 0 0 12px rgba(255,215,0,0.4);
+  }
+
+
+  .player-token-1 { filter: hue-rotate(0deg); }
+  .player-token-2 { filter: hue-rotate(90deg); }
+  .player-token-3 { filter: hue-rotate(180deg); }
+  .player-token-4 { filter: hue-rotate(270deg); }
+  .snakes-cell .player-token { position: absolute; }
+  .snakes-cell .player-token:nth-of-type(1) { top: 2px; left: 2px; }
+  .snakes-cell .player-token:nth-of-type(2) { top: 2px; right: 2px; }
+  .snakes-cell .player-token:nth-of-type(3) { bottom: 2px; left: 2px; }
+  .snakes-cell .player-token:nth-of-type(4) { bottom: 2px; right: 2px; }
+
+
+  /* ===== הגדרת טיימר ===== */
+  #timerSetupScreen .content {
+    width: 90%;
+    max-width: 500px;
+    background: rgba(10,10,30,0.7);
+    backdrop-filter: blur(15px);
+    border-radius: 30px;
+    padding: 40px;
+    text-align: center;
+  }
+  .timer-choice-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+  }
+  .timer-choice-buttons button {
+    flex: 1;
+    font-size: 18px;
+    padding: 20px;
+  }
+  .timer-choice-buttons button.selected {
+    background: linear-gradient(135deg, rgba(255,215,0,0.4), rgba(255,105,180,0.25)) !important;
+    border-color: #ffd700 !important;
+    box-shadow: 0 0 20px rgba(255,215,0,0.5);
+  }
+  #timerSecondsSelect {
+    width: 100%;
+    padding: 16px;
+    margin: 15px 0;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.07);
+    color: white;
+    font-size: 18px;
+    text-align: center;
+    display: none;
+  }
+  #timerSecondsSelect option { color: #000; }
+  #timerSetupStart {
+    margin-top: 20px;
+    padding: 16px 40px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: linear-gradient(135deg, rgba(140,0,255,0.45), rgba(80,0,180,0.3));
+    color: white;
+    font-size: 19px;
+    cursor: pointer;
+  }
+  #timerSetupStart:hover { box-shadow: 0 0 25px rgba(160,0,255,0.7); }
+
+  /* ===== פס טיימר חזותי ===== */
+  .question-timer-bar-container {
+    width: 100%;
+    height: 8px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    display: none;
+  }
+  .question-timer-bar-container.visible { display: block; }
+  .question-timer-bar {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #00ff64, #ffd700, #ff0050);
+    border-radius: 10px;
+    transition: width 0.1s linear;
+  }
+
+
+  /* ===== רמת קושי ===== */
+  #difficultyScreen .content {
+    width: 90%;
+    max-width: 500px;
+    background: rgba(10,10,30,0.7);
+    backdrop-filter: blur(15px);
+    border-radius: 30px;
+    padding: 40px;
+    text-align: center;
+  }
+
+
+  .diff-easy {
+    background: linear-gradient(135deg, rgba(0,255,90,0.35), rgba(0,180,60,0.25)) !important;
+    border: 1px solid rgba(0,255,90,0.5) !important;
+  }
+  .diff-easy:hover { box-shadow: 0 0 25px rgba(0,255,90,0.6) !important; }
+  .diff-medium {
+    background: linear-gradient(135deg, rgba(255,221,0,0.35), rgba(255,180,0,0.25)) !important;
+    border: 1px solid rgba(255,221,0,0.5) !important;
+  }
+  .diff-medium:hover { box-shadow: 0 0 25px rgba(255,221,0,0.6) !important; }
+  .diff-hard {
+    background: linear-gradient(135deg, rgba(255,0,60,0.35), rgba(200,0,40,0.25)) !important;
+    border: 1px solid rgba(255,0,60,0.5) !important;
+  }
+  .diff-hard:hover { box-shadow: 0 0 25px rgba(255,0,60,0.6) !important; }
+
+
+  /* ===== גיוס ===== */
+  #draftScreen .content, #draftUnitScreen .content, #draftExtendScreen .content,
+  #draftExtendMonthsScreen .content, #draftResultScreen .content {
+    width: 90%;
+    max-width: 550px;
+    background: rgba(10,10,30,0.7);
+    backdrop-filter: blur(15px);
+    border-radius: 30px;
+    padding: 40px;
+    text-align: center;
+  }
+  #draftScreen input[type="date"] {
+    width: 100%;
+    padding: 16px;
+    margin: 15px 0 20px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.07);
+    color: white;
+    font-size: 18px;
+    text-align: center;
+  }
+  .draft-gender-buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  .draft-gender-buttons button {
+    flex: 1;
+    font-size: 20px;
+    padding: 22px;
+  }
+  .draft-gender-buttons button.selected {
+    background: linear-gradient(135deg, rgba(255,215,0,0.4), rgba(255,105,180,0.25)) !important;
+    border-color: #ffd700 !important;
+    box-shadow: 0 0 20px rgba(255,215,0,0.5);
+  }
+  #draftNextBtn {
+    margin-top: 10px;
+    padding: 16px 40px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: linear-gradient(135deg, rgba(140,0,255,0.45), rgba(80,0,180,0.3));
+    color: white;
+    font-size: 19px;
+    cursor: pointer;
+  }
+  #draftNextBtn:hover { box-shadow: 0 0 25px rgba(160,0,255,0.7); }
+
+  /* ===== רשימת יחידות ===== */
+  .units-list {
+    max-height: 50vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+  }
+  .units-list::-webkit-scrollbar { width: 6px; }
+  .units-list::-webkit-scrollbar-thumb { background: #ffd700; border-radius: 10px; }
+  .unit-item {
+    padding: 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.06);
+    cursor: pointer;
+    font-size: 18px;
+    transition: 0.25s;
+  }
+  .unit-item:hover {
+    background: rgba(255,215,0,0.15);
+    border-color: #ffd700;
+    transform: scale(1.02);
+  }
+
+  /* ===== הארכה ===== */
+  .extend-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+  }
+  .extend-buttons button {
+    flex: 1;
+    font-size: 20px;
+    padding: 22px;
+  }
+
+  /* ===== תוצאה סופית ===== */
+  #draftResultScreen .draft-final-date {
+    font-size: 26px;
+    color: #ffd700;
+    margin: 15px 0;
+    text-shadow: 0 0 15px rgba(255,215,0,0.5);
+  }
+  #draftResultScreen .draft-countdown {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 25px 0;
+    flex-wrap: wrap;
+  }
+  #draftResultScreen .draft-box {
+    width: 100px;
+    padding: 18px;
+    border-radius: 18px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  #draftResultScreen .draft-box span {
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+    display: block;
+  }
+  #draftResultScreen .draft-box p {
+    font-size: 14px;
+    margin-top: 5px;
+    color: rgba(255,255,255,0.7);
+  }
+
+</style>
 </head>
-
 <body>
 
-<!-- חלקיקים -->
-
-<div id="particles"></div>
-
-<!-- טעינה -->
-
-<div id="loadingScreen" class="screen">
-
-  <div class="loadingText">
-    🚀 טוען...
-  </div>
-
-  <div class="loadingBarContainer">
-
-    <div id="loadingBar"></div>
-
-  </div>
-
+<div id="splashScreen">
+  <div class="splash-title">✨ לוח החופשים ✨</div>
+  <div class="splash-subtitle">טוען...</div>
+  <div class="splash-bar-container"><div class="splash-bar" id="splashBar"></div></div>
+  <div class="splash-percent" id="splashPercent">0%</div>
 </div>
 
-<!-- כפתורים עליונים -->
+<button id="themeToggle">🌙 מצב לילה</button>
+<button id="tipToggle" onclick="showDailyTip()">💡 טיפ יומי</button>
+<button id="shabbatToggle" style="display:none;">🌅 כניסת שבת</button>
 
-<button id="themeToggle">
-🌙 מצב לילה
-</button>
+<!-- נצנצים -->
+<div id="stars"></div>
+<div id="fallingStars"></div>
 
-<button id="shabbatToggle">
-🌅 כניסת שבת
-</button>
-
-<!-- בית -->
-
+<!-- מסך ראשי -->
 <div id="homeScreen" class="screen active">
-
-  <div class="homeContent">
-
-    <h1>
-    📅 לוח החופשים
-    </h1>
-
-    <div class="subtitle">
-    בחר חג או אירוע
-    </div>
-
-    <div class="buttons">
-
-      <button onclick="openCountdown('summer')">
-      ☀️ החופש הגדול
-      </button>
-
-      <button onclick="openCountdown('purim')">
-      🎭 פורים
-      </button>
-
-      <button onclick="openCountdown('pesach')">
-      🍷 פסח
-      </button>
-
-      <button onclick="openCountdown('shavuot')">
-      🧀 שבועות
-      </button>
-
-      <button onclick="openCountdown('hanukkah')">
-      🕎 חנוכה
-      </button>
-
-      <button onclick="openCountdown('roshHashana')">
-      🍎 ראש השנה
-      </button>
-
-      <button onclick="openCountdown('sukkot')">
-      🌿 סוכות
-      </button>
-
-      <button onclick="openCountdown('yomHaatzmaut')">
-      🇮🇱 יום העצמאות
-      </button>
-
-      <button onclick="openShabbatCountdown()">
-      🕯️ שבת
-      </button>
-
-      <button onclick="openBirthday()">
-      🎂 יום הולדת
-      </button>
-
-    </div>
-
+  <h1>✨ לוח החופשים ✨</h1>
+  <div class="buttons">
+    <button onclick="openSummerProgramSelection()">☀️ החופש הגדול</button>
+    <button onclick="openCountdown('purim')">🎭 פורים</button>
+    <button onclick="openCountdown('pesach')">🍷 פסח</button>
+    <button onclick="openCountdown('shavuot')">🧀 שבועות</button>
+    <button onclick="openCountdown('hanukkah')">🕎 חנוכה</button>
+    <button onclick="openCountdown('roshHashana')">🍎 ראש השנה</button>
+    <button onclick="openCountdown('sukkot')">🌿 סוכות</button>
+    <button onclick="openCountdown('yomHaatzmaut')">🇮🇱 יום העצמאות</button>
+    <button onclick="openShabbatCountdown()">🕯️ שבת</button>
+    <button onclick="openBirthday()">🎂 יום הולדת</button>
+    <button onclick="openBarMitzvahSelection()">📜 בר מצווה - בחר פרשה</button>
+    <button onclick="openCalendar()">📅 לוח שנה</button>
+    <button onclick="openDraftScreen()">🪖 מתי אני מתגייס?</button>
+    <button onclick="openGamesMenu()">🎮 משחקים</button>
+    <button onclick="openProfile()">👤 הפרופיל שלי</button>
   </div>
-
 </div>
 
-<!-- ספירה -->
+<!-- מסך בחירת מסלול החופש הגדול -->
+<div id="chooseProgramScreen" class="screen">
+  <button class="backBtn" onclick="goHome()">⬅ חזור</button>
+  <h1>בחר את תוכנית הלימודים שלך</h1>
+  <div class="buttons" style="max-width: 600px;">
+    <button onclick="startSummerCountdown('primary')">יסודי וגננות (מסיימים ב-30/6)</button>
+    <button onclick="startSummerCountdown('middle')">חטיבות (מסיימים ב-18/6)</button>
+    <button onclick="startSummerCountdown('high')">תיכונים (מסיימים ב-18/6)</button>
+  </div>
+</div>
 
+<!-- מסך ספירה -->
 <div id="countdownScreen" class="screen">
-
-  <div class="overlay"></div>
-
-  <div class="content">
-
-    <button
-    class="backBtn"
-    onclick="goHome()">
-
-    🔙 חזרה
-
-    </button>
-
-    <h1 id="eventTitle"></h1>
-
-    <div id="countdown">
-
-      <div class="box">
-
-        <span id="days">0</span>
-
-        <p>ימים</p>
-
-      </div>
-
-      <div class="box">
-
-        <span id="hours">0</span>
-
-        <p>שעות</p>
-
-      </div>
-
-      <div class="box">
-
-        <span id="minutes">0</span>
-
-        <p>דקות</p>
-
-      </div>
-
-      <div class="box">
-
-        <span id="seconds">0</span>
-
-        <p>שניות</p>
-
-      </div>
-
-    </div>
-
-    <div
-    class="progressContainer"
-    id="progressContainer">
-
-      <div id="progressBar"></div>
-
-    </div>
-
-    <div id="progressText"></div>
-
-    <div id="message"></div>
-
+  <button class="backBtn" onclick="goHome()">⬅ חזור</button>
+  <h1 id="eventTitle"></h1>
+  <div id="countdown">
+    <div class="box"><span id="days">0</span>ימים</div>
+    <div class="box"><span id="hours">0</span>שעות</div>
+    <div class="box"><span id="minutes">0</span>דקות</div>
+    <div class="box"><span id="seconds">0</span>שניות</div>
   </div>
-
+  <div id="progressContainer">
+    <div id="progressBar"></div>
+  </div>
+  <p id="progressText"></p>
+  <h2 id="message"></h2>
 </div>
 
-<!-- יום הולדת -->
-
+<!-- מסך יום הולדת -->
 <div id="birthdayScreen" class="screen">
-
-  <div class="overlay"></div>
-
   <div class="content">
-
-    <button
-    class="backBtn"
-    onclick="goHome()">
-
-    🔙 חזרה
-
-    </button>
-
-    <div class="birthdayBox">
-
-      <h1>
-      🎂 יום הולדת
-      </h1>
-
-      <input
-      type="date"
-      id="birthdayInput">
-
-      <br><br>
-
-      <button
-      onclick="startBirthdayCountdown()">
-
-      🚀 התחל
-
-      </button>
-
-    </div>
-
+    <button class="backBtn" onclick="goHome()">⬅ חזור</button>
+    <h1>בחר את תאריך יום ההולדת שלך</h1>
+    <input type="date" id="birthdayInput" />
+    <button onclick="startBirthdayCountdown()">התחל ספירת זמן ליום הולדת</button>
   </div>
-
 </div>
 
-<script src="script.js"></script>
+<!-- מסך בחירת ספרים -->
+<div id="bookScreen" class="screen">
+  <button class="backBtn" onclick="goToHome()">⬅ חזור</button>
+  <h1>בחר ספר</h1>
+  <div class="list-container" id="booksList"></div>
+</div>
+
+<!-- מסך בחירת פרשות -->
+<div id="parashaScreen" class="screen">
+  <button class="backBtn" onclick="goToBookSelection()">⬅ חזור</button>
+  <h1 id="selectedBookTitle">פרשות בספר</h1>
+  <input type="text" id="filterParashotInput" placeholder="חפש פרשה..." oninput="filterParashot()" autocomplete="off"/>
+  <div class="list-container" id="parashotList"></div>
+</div>
+
+<!-- מסך טעינה -->
+<div id="loadingScreen" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:10000;justify-content:center;align-items:center;">
+  <div style="width:350px;padding:35px;border-radius:35px;text-align:center;background:rgba(255,255,255,0.1);backdrop-filter:blur(20px);box-shadow:0 0 35px rgba(255,105,180,0.8);">
+    <h2 style="color:white;margin-bottom:25px;font-size:35px;">טוען...</h2>
+    <div style="width:100%;height:28px;border-radius:50px;overflow:hidden;background:rgba(255,255,255,0.15);">
+      <div id="loadingBar" style="width:0;height:100%;background:linear-gradient(90deg,#ff69b4,#ffd700,cyan);box-shadow:0 0 30px #ff69b4;transition:width 0.2s;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const events = {
+  summer: { title: "☀️ החופש הגדול", date: "June 19, 2026 00:00:00", background: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e" },
+  purim: { title: "🎭 פורים", date: "March 22, 2027 19:00:00", background: "https://images.unsplash.com/photo-1513151233558-d860c5398176" },
+  pesach: { title: "🍷 פסח", date: "April 22, 2027 00:00:00", background: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf" },
+  shavuot: { title: "🧀 שבועות", date: "May 22, 2027 00:00:00", background: "https://images.unsplash.com/photo-1488477181946-6428a0291777" },
+  hanukkah: { title: "🕎 חנוכה", date: "December 4, 2026 00:00:00", background: "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b" },
+  roshHashana: { title: "🍎 ראש השנה", date: "September 11, 2026 00:00:00", background: "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce" },
+  sukkot: { title: "🌿 סוכות", date: "September 16, 2026 00:00:00", background: "https://images.unsplash.com/photo-1506744038136-46273834b3fb" },
+  yomHaatzmaut: { title: "🇮🇱 יום העצמאות", date: "May 12, 2027 00:00:00", background: "https://images.unsplash.com/photo-1552260781-b9db96e49c4e" }
+};
+
+const books = {
+  "בראשית": ["בראשית", "נח", "לך לך", "וירא", "חיי שרה", "תולדות", "ויצא", "וישלח", "וישב", "מקץ", "ויגש", "ויחי"],
+  "שמות": ["שמות", "וארא", "בא", "בשלח", "יתרו", "משפטים", "תרומה", "תצוה", "כי תשא", "ויקהל-פקודי"],
+  "ויקרא": ["ויקרא", "צו", "שמיני", "תזריע-מצורע", "אחרי מות-קדושים", "אמור", "בהר-בחוקותי"],
+  "במדבר": ["במדבר", "נשא", "בהעלותך", "שלח", "קורח", "חקת", "בלק", "פינחס", "מטות-מסעי"],
+  "דברים": ["דברים", "ואתחנן", "עקב", "ראה", "שופטים", "כי תצא", "כי תבוא", "ניצבים-וילך", "האזינו"]
+};
+
+const parashaDates = {
+  // תשפ"ה - לוח ישראל 2024-2025
+  "האזינו (תשפה)":        "2024-10-05",
+  "בראשית (תשפה)":        "2024-10-26",
+  "נח (תשפה)":            "2024-11-02",
+  "לך לך (תשפה)":         "2024-11-09",
+  "וירא (תשפה)":          "2024-11-16",
+  "חיי שרה (תשפה)":       "2024-11-23",
+  "תולדות (תשפה)":        "2024-11-30",
+  "ויצא (תשפה)":          "2024-12-07",
+  "וישלח (תשפה)":         "2024-12-14",
+  "וישב (תשפה)":          "2024-12-21",
+  "מקץ (תשפה)":           "2024-12-28",
+  "ויגש (תשפה)":          "2025-01-04",
+  "ויחי (תשפה)":          "2025-01-11",
+  "שמות (תשפה)":          "2025-01-18",
+  "וארא (תשפה)":          "2025-01-25",
+  "בא (תשפה)":            "2025-02-01",
+  "בשלח (תשפה)":          "2025-02-08",
+  "יתרו (תשפה)":          "2025-02-15",
+  "משפטים (תשפה)":        "2025-02-22",
+  "תרומה (תשפה)":         "2025-03-01",
+  "תצוה (תשפה)":          "2025-03-08",
+  "כי תשא (תשפה)":        "2025-03-15",
+  "ויקהל (תשפה)":         "2025-03-22",
+  "פקודי (תשפה)":         "2025-03-29",
+  "ויקרא (תשפה)":         "2025-04-05",
+  "צו (תשפה)":            "2025-04-12",
+  "שמיני (תשפה)":         "2025-04-26",
+  "תזריע-מצורע (תשפה)":   "2025-05-03",
+  "אחרי מות-קדושים (תשפה)":"2025-05-10",
+  "אמור (תשפה)":          "2025-05-17",
+  "בהר-בחוקותי (תשפה)":   "2025-05-24",
+  "במדבר (תשפה)":         "2025-05-31",
+  "נשא (תשפה)":           "2025-06-07",
+  "בהעלותך (תשפה)":       "2025-06-14",
+  "שלח (תשפה)":           "2025-06-21",
+  "קורח (תשפה)":          "2025-06-28",
+  "חקת (תשפה)":           "2025-07-05",
+  "בלק (תשפה)":           "2025-07-12",
+  "פינחס (תשפה)":         "2025-07-19",
+  "מטות-מסעי (תשפה)":     "2025-07-26",
+  "דברים (תשפה)":         "2025-08-02",
+  "ואתחנן (תשפה)":        "2025-08-09",
+  "עקב (תשפה)":           "2025-08-16",
+  "ראה (תשפה)":           "2025-08-23",
+  "שופטים (תשפה)":        "2025-08-30",
+  "כי תצא (תשפה)":        "2025-09-06",
+  "כי תבוא (תשפה)":       "2025-09-13",
+  "ניצבים (תשפה)":        "2025-09-20",
+  "שלח":             "2026-06-06",
+  "קורח":            "2026-06-13",
+  "חקת":             "2026-06-20",
+  "בלק":             "2026-06-27",
+  "פינחס":           "2026-07-04",
+  "מטות-מסעי":       "2026-07-11",
+  "דברים":           "2026-07-18",
+  "ואתחנן":          "2026-07-25",
+  "עקב":             "2026-08-01",
+  "ראה":             "2026-08-08",
+  "שופטים":          "2026-08-15",
+  "כי תצא":          "2026-08-22",
+  "כי תבוא":         "2026-08-29",
+  "ניצבים-וילך":     "2026-09-05",
+  "האזינו":          "2026-09-19",
+  "בראשית":          "2026-10-10",
+  "נח":              "2026-10-17",
+  "לך לך":           "2026-10-24",
+  "וירא":            "2026-10-31",
+  "חיי שרה":         "2026-11-07",
+  "תולדות":          "2026-11-14",
+  "ויצא":            "2026-11-21",
+  "וישלח":           "2026-11-28",
+  "וישב":            "2026-12-05",
+  "מקץ":             "2026-12-12",
+  "ויגש":            "2026-12-19",
+  "ויחי":            "2026-12-26",
+  "שמות":            "2027-01-02",
+  "וארא":            "2027-01-09",
+  "בא":              "2027-01-16",
+  "בשלח":            "2027-01-23",
+  "יתרו":            "2027-01-30",
+  "משפטים":          "2027-02-06",
+  "תרומה":           "2027-02-13",
+  "תצוה":            "2027-02-20",
+  "כי תשא":          "2027-02-27",
+  "ויקהל-פקודי":     "2027-03-06",
+  "ויקרא":           "2027-03-20",
+  "צו":              "2027-03-27",
+  "שמיני":           "2027-04-03",
+  "תזריע-מצורע":     "2027-04-10",
+  "אחרי מות-קדושים": "2027-05-01",
+  "אמור":            "2027-05-15",
+  "בהר-בחוקותי":     "2027-05-22",
+  "במדבר":           "2027-06-05",
+  "נשא":             "2027-06-12",
+  "בהעלותך":         "2027-06-19"
+};
+
+
+let countdownInterval = null;
+let currentBackground = "";
+let dark = false;
+let selectedBook = "";
+let shabbatMode = "כניסה";
+let isLoading = false;
+
+const themeToggle = document.getElementById("themeToggle");
+const shabbatToggle = document.getElementById("shabbatToggle");
+const loadingScreen = document.getElementById("loadingScreen");
+const loadingBar = document.getElementById("loadingBar");
+
+themeToggle.addEventListener("click", () => {
+  dark = !dark;
+  document.body.classList.toggle("lightMode");
+  themeToggle.textContent = dark ? "☀️ מצב יום" : "🌙 מצב לילה";
+});
+
+shabbatToggle.addEventListener("click", () => {
+  if (shabbatMode === "כניסה") {
+    shabbatMode = "יציאה";
+    shabbatToggle.textContent = "🌃 צאת שבת";
+  } else {
+    shabbatMode = "כניסה";
+    shabbatToggle.textContent = "🌅 כניסת שבת";
+  }
+  startShabbatCountdown();
+});
+
+function showLoadingBar(callback) {
+  if (isLoading) return;
+  isLoading = true;
+  loadingScreen.style.display = "flex";
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += Math.random() * 35;
+    if (progress > 100) progress = 100;
+    loadingBar.style.width = progress + "%";
+    if (progress >= 100) {
+      clearInterval(interval);
+      setTimeout(() => {
+        loadingScreen.style.display = "none";
+        loadingBar.style.width = "0%";
+        isLoading = false;
+        callback();
+      }, 150);
+    }
+  }, 35);
+}
+
+function hideAllScreens() {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  const tipBtn = document.getElementById("tipToggle");
+  if(tipBtn) tipBtn.style.display = "none";
+}
+
+function goHome() {
+  clearInterval(countdownInterval);
+  hideAllScreens();
+  document.getElementById("homeScreen").classList.add("active");
+  shabbatToggle.style.display = "none";
+  document.getElementById("tipToggle").style.display = "block";
+}
+
+function goToHome() {
+  hideAllScreens();
+  document.getElementById("homeScreen").classList.add("active");
+}
+
+function goToBookSelection() {
+  hideAllScreens();
+  document.getElementById("bookScreen").classList.add("active");
+}
+
+function openSummerProgramSelection() {
+  clearInterval(countdownInterval);
+  hideAllScreens();
+  document.getElementById("chooseProgramScreen").classList.add("active");
+}
+
+function startSummerCountdown(program) {
+  let finishDate;
+  const now = new Date();
+  if (program === "primary") {
+    finishDate = new Date(now.getFullYear(), 5, 30, 0, 0, 0);
+  } else {
+    finishDate = new Date(now.getFullYear(), 5, 18, 0, 0, 0);
+  }
+  if (finishDate < now) {
+    finishDate.setFullYear(finishDate.getFullYear() + 1);
+  }
+  hideAllScreens();
+  const screen = document.getElementById("countdownScreen");
+  screen.classList.add("active");
+  screen.style.backgroundImage = `url('${events.summer.background}')`;
+  screen.style.backgroundSize = "cover";
+  screen.style.backgroundPosition = "center";
+  document.getElementById("eventTitle").textContent = "☀️ סיום הלימודים וספירת זמן לחופש הגדול";
+  document.getElementById("message").textContent = "";
+  document.getElementById("progressContainer").style.display = "block";
+  document.getElementById("progressText").style.display = "block";
+  shabbatToggle.style.display = "none";
+
+  const backButton = screen.querySelector(".backBtn");
+  if (backButton) {
+    backButton.style.display = "block";
+    backButton.style.position = "absolute";
+    backButton.style.top = "20px";
+    backButton.style.right = "20px";
+    backButton.style.zIndex = "10";
+  }
+
+  startCountdown(finishDate);
+}
+
+function openCountdown(eventName) {
+  const event = events[eventName];
+  if (!event) return;
+  showLoadingBar(() => {
+    clearInterval(countdownInterval);
+    hideAllScreens();
+    const screen = document.getElementById("countdownScreen");
+    screen.classList.add("active");
+    screen.style.backgroundImage = `url('${event.background}')`;
+    screen.style.backgroundSize = "cover";
+    screen.style.backgroundPosition = "center";
+    currentBackground = `url('${event.background}')`;
+    document.getElementById("eventTitle").textContent = event.title;
+    document.getElementById("message").textContent = "";
+    document.getElementById("progressContainer").style.display = "block";
+    document.getElementById("progressText").style.display = "block";
+    shabbatToggle.style.display = "none";
+    let targetDate = new Date(event.date);
+    const now = new Date();
+    if (targetDate < now) targetDate.setFullYear(now.getFullYear() + 1);
+
+    const backButton = screen.querySelector(".backBtn");
+    if (backButton) {
+      backButton.style.display = "block";
+      backButton.style.position = "absolute";
+      backButton.style.top = "20px";
+      backButton.style.right = "20px";
+      backButton.style.zIndex = "10";
+    }
+
+    startCountdown(targetDate);
+  });
+}
+
+function openBarMitzvahSelection() {
+  hideAllScreens();
+  document.getElementById("bookScreen").classList.add("active");
+  loadBooksList();
+}
+
+function loadBooksList() {
+  const booksList = document.getElementById("booksList");
+  booksList.innerHTML = "";
+  Object.keys(books).forEach(book => {
+    const btn = document.createElement("div");
+    btn.className = "list-item";
+    btn.textContent = book;
+    btn.onclick = () => selectBook(book);
+    booksList.appendChild(btn);
+  });
+}
+
+function selectBook(book) {
+  selectedBook = book;
+  hideAllScreens();
+  document.getElementById("parashaScreen").classList.add("active");
+  document.getElementById("selectedBookTitle").textContent = `פרשות בספר ${book}`;
+  loadParashotList(book);
+  document.getElementById('filterParashotInput').value = '';
+}
+
+function loadParashotList(book) {
+  const parashotList = document.getElementById("parashotList");
+  parashotList.innerHTML = "";
+  books[book].forEach(parasha => {
+    const btn = document.createElement("div");
+    btn.className = "list-item";
+    btn.textContent = parasha;
+    btn.onclick = () => selectParasha(parasha);
+    parashotList.appendChild(btn);
+  });
+}
+
+// חיפוש תווי גמיש בכל מיקום ונטרול רווחים
+function filterParashot() {
+  const filterInput = document.getElementById('filterParashotInput');
+  let filterChars = filterInput.value.trim().replace(/\s+/g, '').split('');
+  const parashotList = document.getElementById("parashotList");
+  const items = parashotList.querySelectorAll('.list-item');
+  items.forEach(item => {
+    const text = item.textContent.replace(/\s+/g, '');
+    const matches = filterChars.every(ch => text.includes(ch));
+    item.style.display = matches ? '' : 'none';
+  });
+}
+
+function selectParasha(parasha) {
+  if (!(parasha in parashaDates)) {
+    alert("אין תאריך ספציפי לפרשה זו כרגע.");
+    return;
+  }
+  const now = new Date();
+  let dateParts = parashaDates[parasha].split("-");
+  // בדיקת תקינות תאריך
+  if (dateParts.length < 3) {
+    alert("תאריך הפרשה לא תקין.");
+    return;
+  }
+  let year = parseInt(dateParts[0], 10);
+  let month = parseInt(dateParts[1], 10) - 1; // חודשים ב-JS מאפס
+  let day = parseInt(dateParts[2], 10);
+  let date = new Date(year, month, day);
+  // אם התאריך כבר עבר השנה הנוכחית, נוסיף שנה
+  if (date < now) {
+    date = new Date(year + 1, month, day);
+  }
+  clearInterval(countdownInterval);
+  hideAllScreens();
+  const screen = document.getElementById("countdownScreen");
+  screen.classList.add("active");
+  screen.style.backgroundImage = "";
+  screen.style.backgroundColor = dark ? "rgba(0,0,20,0.8)" : "rgba(255,255,255,0.7)";
+  document.getElementById("eventTitle").textContent = `⏳ זמן לפרשת ${parasha}`;
+  document.getElementById("message").textContent = "";
+
+  const backButton = screen.querySelector(".backBtn");
+  if (backButton) {
+    backButton.style.display = "block";
+    backButton.style.position = "absolute";
+    backButton.style.top = "20px";
+    backButton.style.right = "20px";
+    backButton.style.zIndex = "10";
+  }
+
+  startCountdown(date);
+}
+
+function openBirthday() {
+  clearInterval(countdownInterval);
+  hideAllScreens();
+  const screen = document.getElementById("birthdayScreen");
+  screen.classList.add("active");
+  screen.style.backgroundImage = "url('https://images.unsplash.com/photo-1530103862676-de8c9debad1d')";
+  screen.style.backgroundSize = "cover";
+  screen.style.backgroundPosition = "center";
+  currentBackground = "url('https://images.unsplash.com/photo-1530103862676-de8c9debad1d')";
+  const savedBirthday = localStorage.getItem("birthday");
+  if (savedBirthday) {
+    const input = document.getElementById("birthdayInput");
+    if (input) input.value = savedBirthday;
+  }
+}
+
+function startBirthdayCountdown() {
+  const input = document.getElementById("birthdayInput").value;
+  if (!input) {
+    alert("❌ תבחר תאריך");
+    return;
+  }
+  localStorage.setItem("birthday", input);
+  const birthDate = new Date(input);
+  const now = new Date();
+  let nextBirthday = new Date(now.getFullYear(), birthDate.getMonth(), birthDate.getDate(), 23, 59, 59);
+  if (nextBirthday < now) nextBirthday.setFullYear(nextBirthday.getFullYear() + 1);
+  hideAllScreens();
+  const screen = document.getElementById("countdownScreen");
+  screen.classList.add("active");
+  screen.style.backgroundImage = currentBackground;
+  document.getElementById("eventTitle").textContent = "🎂 יום ההולדת שלך";
+  document.getElementById("progressContainer").style.display = "block";
+  document.getElementById("progressText").style.display = "block";
+  shabbatToggle.style.display = "none";
+
+  const backButton = screen.querySelector(".backBtn");
+  if (backButton) {
+    backButton.style.display = "block";
+    backButton.style.position = "absolute";
+    backButton.style.top = "20px";
+    backButton.style.right = "20px";
+    backButton.style.zIndex = "10";
+  }
+
+  startCountdown(nextBirthday);
+}
+
+function openShabbatCountdown() {
+  clearInterval(countdownInterval);
+  hideAllScreens();
+  const screen = document.getElementById("countdownScreen");
+  screen.classList.add("active");
+  currentBackground = "url('https://images.unsplash.com/photo-1506126613408-eca07ce68773')";
+  screen.style.backgroundImage = currentBackground;
+  screen.style.backgroundSize = "cover";
+  screen.style.backgroundPosition = "center";
+  document.getElementById("eventTitle").textContent = "🕯️ שבת";
+  document.getElementById("progressContainer").style.display = "none";
+  document.getElementById("progressText").style.display = "none";
+  shabbatToggle.style.display = "block";
+  shabbatMode = "כניסה";
+  shabbatToggle.textContent = "🌅 כניסת שבת";
+
+  const backButton = screen.querySelector(".backBtn");
+  if (backButton) {
+    backButton.style.display = "block";
+    backButton.style.position = "absolute";
+    backButton.style.top = "20px";
+    backButton.style.right = "20px";
+    backButton.style.zIndex = "10";
+  }
+
+  startShabbatCountdown();
+}
+
+function startShabbatCountdown() {
+  clearInterval(countdownInterval);
+  countdownInterval = setInterval(() => {
+    const now = new Date();
+    let target = new Date(now);
+    let message = "";
+    if (shabbatMode === "כניסה") {
+      let daysUntilFriday = (5 - now.getDay() + 7) % 7;
+      if (daysUntilFriday === 0 && now.getHours() >= 19) daysUntilFriday = 7;
+      target.setDate(now.getDate() + daysUntilFriday);
+      target.setHours(19, 0, 0, 0);
+      message = "🌅 כניסת שבת";
+    } else {
+      let daysUntilSaturday = (6 - now.getDay() + 7) % 7;
+      if (daysUntilSaturday === 0 && now.getHours() >= 20) daysUntilSaturday = 7;
+      target.setDate(now.getDate() + daysUntilSaturday);
+      target.setHours(20, 0, 0, 0);
+      message = "🌃 צאת שבת";
+    }
+    document.getElementById("message").textContent = message;
+    updateCountdown(target);
+  }, 1000);
+}
+
+function startCountdown(targetDate) {
+  clearInterval(countdownInterval);
+  updateCountdown(targetDate);
+  countdownInterval = setInterval(updateCountdown, 1000, targetDate);
+}
+
+function updateCountdown(targetDate) {
+  const now = new Date().getTime();
+  const target = targetDate.getTime();
+  const distance = target - now;
+  if (distance <= 0) {
+    clearInterval(countdownInterval);
+    document.getElementById("message").textContent = "🎉 הגיע הזמן!";
+    document.getElementById("days").textContent = 0;
+    document.getElementById("hours").textContent = 0;
+    document.getElementById("minutes").textContent = 0;
+    document.getElementById("seconds").textContent = 0;
+    document.getElementById("progressBar").style.width = "100%";
+    document.getElementById("progressText").textContent = "100% עבר";
+    return;
+  }
+  const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  document.getElementById("days").textContent = days;
+  document.getElementById("hours").textContent = hours;
+  document.getElementById("minutes").textContent = minutes;
+  document.getElementById("seconds").textContent = seconds;
+  const startOfYear = new Date(targetDate.getFullYear(), 0, 1).getTime();
+  const endOfYear = new Date(targetDate.getFullYear() + 1, 0, 1).getTime();
+  const yearLength = endOfYear - startOfYear;
+  const passed = yearLength - (target - now);
+  let progress = (passed / yearLength) * 100;
+  progress = Math.min(Math.max(progress, 0), 100);
+  document.getElementById("progressBar").style.width = progress.toFixed(1) + "%";
+  document.getElementById("progressText").textContent = `🚀 ${progress.toFixed(1)}% עבר`;
+}
+
+/* נצנצים */
+const starsContainer = document.getElementById('stars');
+const fallingStarsContainer = document.getElementById('fallingStars');
+
+function createStars() {
+  for(let i = 0; i < 100; i++) {
+    let star = document.createElement('div');
+    star.className = 'star';
+    const sizeRand = Math.random();
+    if(sizeRand < 0.33) star.classList.add('small');
+    else if(sizeRand < 0.66) star.classList.add('medium');
+    else star.classList.add('large');
+    star.style.top = Math.random() * 100 + 'vh';
+    star.style.left = Math.random() * 100 + 'vw';
+    star.style.animationDelay = (Math.random() * 2) + 's';
+    starsContainer.appendChild(star);
+  }
+}
+
+function createFallingStar() {
+  let fallingStar = document.createElement('div');
+  fallingStar.className = 'falling-star';
+  fallingStar.style.top = Math.random() * 50 + 'vh';
+  fallingStar.style.left = Math.random() * 100 + 'vw';
+  fallingStar.style.animationDuration = (2 + Math.random() * 3) + 's';
+  fallingStarsContainer.appendChild(fallingStar);
+
+  setTimeout(() => {
+    fallingStar.remove();
+  }, 5000);
+}
+
+createStars();
+setInterval(createFallingStar, 1000);
+document.getElementById("tipToggle").style.display = "block";
+
+
+/* ===== Splash ===== */
+(function(){
+  const splash=document.getElementById('splashScreen'),bar=document.getElementById('splashBar'),pct=document.getElementById('splashPercent');
+  let p=0;
+  const iv=setInterval(()=>{
+    p+=Math.random()*18+5;
+    if(p>=100){p=100;bar.style.width='100%';pct.textContent='100%';clearInterval(iv);setTimeout(()=>{splash.classList.add('fade-out');setTimeout(()=>splash.remove(),650);},200);}
+    else{bar.style.width=p.toFixed(0)+'%';pct.textContent=p.toFixed(0)+'%';}
+  },40);
+})();
+
+/* ===== לוח שנה ===== */
+document.addEventListener("DOMContentLoaded", function(){
+(function(){
+  const heMonths=["ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט","ספטמבר","אוקטובר","נובמבר","דצמבר"];
+  const enMonths=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const heDays=["א׳","ב׳","ג׳","ד׳","ה׳","ו׳","ש׳"];
+  let viewYear,viewMonth;
+
+  function parashaMap(){
+    const m={};
+    for(const[k,v]of Object.entries(parashaDates)) m[v]=k;
+    return m;
+  }
+
+  function render(){
+    const pmap=parashaMap();
+    document.getElementById("calTitle").innerHTML=
+      `${heMonths[viewMonth]} <span style="font-size:16px;opacity:.55">${enMonths[viewMonth]} ${viewYear}</span>`;
+
+    const names=document.getElementById("calDayNames");
+    names.innerHTML="";
+    heDays.forEach(d=>{const e=document.createElement("div");e.className="cal-day-name";e.textContent=d;names.appendChild(e);});
+
+    const grid=document.getElementById("calDays");
+    grid.innerHTML="";
+    const firstDay=new Date(viewYear,viewMonth,1).getDay();
+    const daysInMonth=new Date(viewYear,viewMonth+1,0).getDate();
+    const today=new Date();
+
+    for(let i=0;i<firstDay;i++){const e=document.createElement("div");e.className="cal-day empty";grid.appendChild(e);}
+
+    for(let d=1;d<=daysInMonth;d++){
+      const el=document.createElement("div");
+      el.className="cal-day";
+      const mm=String(viewMonth+1).padStart(2,"0");
+      const dd=String(d).padStart(2,"0");
+      const key=`${viewYear}-${mm}-${dd}`;
+
+      if(d===today.getDate()&&viewMonth===today.getMonth()&&viewYear===today.getFullYear())
+        el.classList.add("today");
+
+      if(pmap[key]){
+        el.classList.add("has-parasha");
+        const s=document.createElement("span");s.textContent=d;
+        const dot=document.createElement("div");dot.className="parasha-dot";
+        const lbl=document.createElement("div");lbl.className="cal-parasha-label";lbl.textContent=pmap[key];
+        el.append(s,dot,lbl);
+      } else {
+        el.textContent=d;
+      }
+
+      el.addEventListener("click",()=>{
+        const res=document.getElementById("calCountdownResult");
+        const target=new Date(viewYear,viewMonth,d,23,59,59);
+        const diff=target-new Date();
+        if(diff<=0){
+          res.innerHTML=`📅 ${d} ${heMonths[viewMonth]} ${viewYear} — תאריך זה כבר עבר`;
+        } else {
+          const days=Math.floor(diff/86400000);
+          const hrs=Math.floor(diff%86400000/3600000);
+          const mins=Math.floor(diff%3600000/60000);
+          const ps=pmap[key]?` — פרשת ${pmap[key]}`:"";
+          res.innerHTML=`📅 ${d} ${heMonths[viewMonth]} ${viewYear}${ps}<br>עוד <b>${days}</b> ימים, <b>${hrs}</b> שעות, <b>${mins}</b> דקות`;
+        }
+        res.classList.add("visible");
+      });
+
+      grid.appendChild(el);
+    }
+
+    const r=document.getElementById("calCountdownResult");
+    r.innerHTML="";r.classList.remove("visible");
+  }
+
+  window.openCalendar=function(){
+    const n=new Date();viewYear=n.getFullYear();viewMonth=n.getMonth();
+    render();
+    document.getElementById("calendarOverlay").classList.add("active");
+  };
+
+  document.getElementById("calClose").addEventListener("click",()=>{
+    document.getElementById("calendarOverlay").classList.remove("active");
+    goHome();
+  });
+  document.getElementById("calPrev").addEventListener("click",()=>{
+    if(--viewMonth<0){viewMonth=11;viewYear--;}render();
+  });
+  document.getElementById("calNext").addEventListener("click",()=>{
+    if(++viewMonth>11){viewMonth=0;viewYear++;}render();
+  });
+})();
+});
+
+
+/* ===== טיפ יומי ===== */
+const dailyTips = [
+  "שתה לפחות 8 כוסות מים ביום — הגוף שלך יודה לך 💧",
+  "כל בוקר כתוב 3 דברים שאתה אסיר תודה עליהם 🙏",
+  "צא להליכה של 20 דקות ביום — זה משנה הכל 🚶",
+  "לפני שאתה עונה בכעס — קח נשימה עמוקה אחת 🌬️",
+  "כבה את הטלפון שעה לפני השינה לשנת לילה טובה יותר 📵",
+  "אמור 'תודה' לאנשים סביבך — זה מחזק קשרים 🤝",
+  "אכול ארוחת בוקר — זה הדלק של היום שלך ☀️",
+  "למד משהו חדש כל יום, אפילו דבר קטן 📚",
+  "הסדר את החדר שלך — סביבה מסודרת = מוח מסודר 🏠",
+  "צחוק לפחות פעם אחת ביום — זה התרופה הטובה ביותר 😄",
+  "כתוב את המטרות שלך על נייר — כתיבה מגשימה חלומות ✍️",
+  "עזור למישהו היום בלי לבקש תמורה 🌟",
+  "אל תדחה למחר מה שאפשר לעשות היום ⏰",
+  "התחל כל יום עם משימה קטנה שתסיים אותה — זה נותן תנופה ✅",
+  "הסתכל על הכוכבים הלילה — זה מכניס פרופורציות לחיים 🌌",
+  "דבר פחות, האזן יותר — תלמד יותר ממה שאתה חושב 👂",
+  "נסה מאכל חדש השבוע — הרפתקה קולינרית מחכה לך 🍽️",
+  "צור קשר עם חבר שלא דיברת איתו זמן רב 📞",
+  "אל תשווה את עצמך לאחרים — המסלול שלך הוא שלך בלבד 🛤️",
+  "בצע מתיחות של 5 דקות בבוקר — גמישות הגוף = גמישות החיים 🧘",
+  "קרא 10 עמודים ספר לפני השינה במקום לגלול סושיאל 📖",
+  "שמור כסף כל חודש, גם סכום קטן — ההרגל חשוב מהסכום 💰",
+  "בחר אחד: להתלונן פחות היום או לחייך יותר — קל יותר לחייך 😊",
+  "זכור: כל טעות היא שיעור, לא כישלון 🎓",
+  "אכול ירוקים היום — הגוף שלך בנוי מהאוכל שאתה אוכל 🥦",
+  "תן לעצמך הפסקה של 5 דקות כל שעה — הפרודוקטיביות תעלה 🔋",
+  "כתוב מכתב לעצמך על מה שאתה רוצה להשיג בשנה הבאה 🎯",
+  "לך לישון בשעה קבועה — שגרת שינה היא מתנה לעצמך 😴",
+  "פרגן למישהו היום מפרגון אמיתי — זה מדבק 💛",
+  "התנתק מהרשתות החברתיות ליום אחד בשבוע — תרגיש הפרש 🌿"
+];
+
+function showDailyTip() {
+  const overlay = document.getElementById("tipOverlay");
+  const tipText = document.getElementById("tipText");
+  overlay.style.display = "flex";
+  tipText.textContent = dailyTips[Math.floor(Math.random() * dailyTips.length)];
+}
+
+function getNewTip() {
+  document.getElementById("tipText").textContent =
+    dailyTips[Math.floor(Math.random() * dailyTips.length)];
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("tipClose").addEventListener("click", () => {
+    document.getElementById("tipOverlay").style.display = "none";
+  });
+  document.getElementById("tipNew").addEventListener("click", getNewTip);
+  document.getElementById("tipOverlay").addEventListener("click", (e) => {
+    if(e.target === document.getElementById("tipOverlay"))
+      document.getElementById("tipOverlay").style.display = "none";
+  });
+});
+
+
+/* ===== פרופיל ===== */
+function openProfile(){
+  hideAllScreens();
+  document.getElementById("profileScreen").classList.add("active");
+
+  const saved = localStorage.getItem("userProfile");
+  if(saved){
+    const data = JSON.parse(saved);
+    document.getElementById("profileName").value = data.name || "";
+    document.getElementById("profileBirthdate").value = data.birthdate || "";
+    showProfileInfo(data);
+  }
+}
+
+function saveProfile(){
+  const name = document.getElementById("profileName").value.trim();
+  const birthdate = document.getElementById("profileBirthdate").value;
+
+  if(!name || !birthdate){
+    alert("❌ נא למלא שם ותאריך לידה");
+    return;
+  }
+
+  const data = {name, birthdate};
+  localStorage.setItem("userProfile", JSON.stringify(data));
+  showProfileInfo(data);
+}
+
+function showProfileInfo(data){
+  const result = document.getElementById("profileResult");
+  const birth = new Date(data.birthdate);
+  const today = new Date();
+
+  // גיל
+  let age = today.getFullYear() - birth.getFullYear();
+  const hasHadBirthdayThisYear = (today.getMonth() > birth.getMonth()) ||
+    (today.getMonth() === birth.getMonth() && today.getDate() >= birth.getDate());
+  if(!hasHadBirthdayThisYear) age--;
+
+  // בר/בת מצווה - גיל 13 לבנים, 12 לבנות (כאן נציג שניהם)
+  const barMitzvahYear = birth.getFullYear() + 13;
+  const batMitzvahYear = birth.getFullYear() + 12;
+
+  result.innerHTML = `
+    שלום <b>${data.name}</b>! 👋<br>
+    הגיל שלך: <b>${age}</b><br>
+    גיל בר מצווה (13) יחול בשנת: <b>${barMitzvahYear}</b><br>
+    גיל בת מצווה (12) יחול בשנת: <b>${batMitzvahYear}</b><br>
+    <small style="opacity:0.7">הפרטים שלך נשמרו בדפדפן שלך 💾</small>
+  `;
+  result.classList.add("visible");
+}
+
+/* ===== נתוני נושאים ===== */
+
+// טריוויה - פרשות ושבתות
+const triviaParashot = [
+  {q:"מהי הפרשה הראשונה בתורה?", options:["בראשית","שמות","ויקרא","דברים"], correct:0, diff:"easy"},
+  {q:"באיזו פרשה נברא העולם?", options:["בראשית","נח","לך לך","וירא"], correct:0, diff:"easy"},
+  {q:"מי בנה את התיבה בפרשת נח?", options:["אברהם","נח","משה","יעקב"], correct:1, diff:"easy"},
+  {q:"מי קיבל את התורה בהר סיני?", options:["אברהם","יצחק","יעקב","משה"], correct:3, diff:"easy"},
+  {q:"באיזו פרשה מסופר על מכירת יוסף?", options:["וישב","תולדות","נח","יתרו"], correct:0, diff:"easy"},
+  {q:"איזו פרשה היא האחרונה בתורה?", options:["דברים","ואתחנן","וזאת הברכה","ניצבים"], correct:2, diff:"easy"},
+  {q:"מי היה אביו של אברהם?", options:["תרח","נחור","שם","לבן"], correct:0, diff:"easy"},
+  {q:"איזו פרשה מתארת את יציאת מצרים?", options:["שמות","בא","וארא","בשלח"], correct:1, diff:"easy"},
+  {q:"באיזה ספר נמצאת פרשת במדבר?", options:["בראשית","שמות","במדבר","דברים"], correct:2, diff:"easy"},
+  {q:"באיזו פרשה ניתנו עשרת הדיברות?", options:["בראשית","שמות","יתרו","ויקרא"], correct:2, diff:"easy"},
+  {q:"מי הם שני בניו של יצחק?", options:["יוסף ובנימין","עשו ויעקב","קין והבל","אפרים ומנשה"], correct:1, diff:"easy"},
+  {q:"כמה ספרים יש בחמשה חומשי תורה?", options:["שלושה","ארבעה","חמישה","שישה"], correct:2, diff:"easy"},
+  {q:"באיזו פרשה נמכר יוסף לעבד במצרים?", options:["וישב","מקץ","ויחי","ויגש"], correct:0, diff:"easy"},
+  {q:"באיזו פרשה נולד משה רבנו?", options:["שמות","וארא","בא","בשלח"], correct:0, diff:"easy"},
+  {q:"איזו פרשה מספרת על עקדת יצחק?", options:["חיי שרה","וירא","תולדות","ויצא"], correct:1, diff:"easy"},
+  {q:"מהו שמו של האדם הראשון?", options:["נח","אדם","אברהם","משה"], correct:1, diff:"easy"},
+  {q:"איזו פרשה מספרת על המכות במצרים?", options:["וארא","בא","בשלח","יתרו"], correct:1, diff:"easy"},
+  {q:"מי הוביל את בני ישראל ממצרים?", options:["אהרון","יוסף","משה","יהושע"], correct:2, diff:"easy"},
+  {q:"באיזו פרשה חוצים בני ישראל את ים סוף?", options:["שמות","בא","בשלח","יתרו"], correct:2, diff:"easy"},
+  {q:"איזו פרשה היא הקצרה ביותר בתורה?", options:["וזאת הברכה","ויחי","נצבים","תצוה"], correct:1, diff:"easy"},
+  {q:"כמה פרשות יש בספר בראשית?", options:["10","12","11","13"], correct:1, diff:"medium"},
+  {q:"באיזו פרשה נברך אברהם וניתנת לו הארץ?", options:["נח","לך לך","וירא","חיי שרה"], correct:1, diff:"medium"},
+  {q:"באיזו פרשה מתה רחל אמנו?", options:["וישלח","ויצא","תולדות","חיי שרה"], correct:0, diff:"medium"},
+  {q:"איזו פרשה פותחת את ספר דברים?", options:["דברים","ואתחנן","עקב","ראה"], correct:0, diff:"medium"},
+  {q:"באיזו פרשה מוקם המשכן?", options:["תרומה","ויקהל","פקודי","תצוה"], correct:2, diff:"medium"},
+  {q:"איזו פרשה מתארת את חטא העגל?", options:["יתרו","משפטים","כי תשא","ויקהל"], correct:2, diff:"medium"},
+  {q:"באיזו פרשה נשלחים המרגלים לארץ?", options:["בהעלותך","שלח","קורח","חקת"], correct:1, diff:"medium"},
+  {q:"איזו פרשה מספרת על בלעם וחמורו?", options:["חקת","בלק","פינחס","מטות"], correct:1, diff:"medium"},
+  {q:"באיזה פרשה נבנה מגדל בבל?", options:["בראשית","נח","לך לך","וירא"], correct:1, diff:"medium"},
+  {q:"כמה שנים היו בני ישראל במדבר?", options:["20","30","40","50"], correct:2, diff:"medium"},
+  {q:"באיזו פרשה מתברך יעקב מאביו יצחק?", options:["חיי שרה","תולדות","ויצא","וישלח"], correct:1, diff:"medium"},
+  {q:"באיזו פרשה מתגלה הסנה הבוער למשה?", options:["בראשית","שמות","ויקרא","במדבר"], correct:1, diff:"medium"},
+  {q:"מי היה המנהיג שהמשיך את דרכו של משה?", options:["אהרון","כלב","יהושע","פנחס"], correct:2, diff:"medium"},
+  {q:"באיזו פרשה נפגשים יעקב ועשו לאחר שנים?", options:["ויצא","וישלח","וישב","ויחי"], correct:1, diff:"medium"},
+  {q:"איזו פרשה מתארת את מתנת הבכורה שמוכר עשו?", options:["לך לך","וירא","תולדות","ויצא"], correct:2, diff:"medium"},
+  {q:"באיזו פרשה מצווה ה' על שמירת השבת לראשונה בעשרת הדיברות?", options:["בראשית","שמות","יתרו","ויקרא"], correct:2, diff:"medium"},
+  {q:"מי היה אביו של יוסף?", options:["יצחק","עשו","יעקב","לבן"], correct:2, diff:"medium"},
+  {q:"באיזו פרשה מתפלל אברהם על אנשי סדום?", options:["לך לך","וירא","חיי שרה","תולדות"], correct:1, diff:"medium"},
+  {q:"איזו פרשה מתארת את לידת התאומים עשו ויעקב?", options:["חיי שרה","תולדות","ויצא","וישלח"], correct:1, diff:"medium"},
+  {q:"באיזו פרשה מתמנה יוסף למשנה למלך מצרים?", options:["וישב","מקץ","ויגש","ויחי"], correct:1, diff:"medium"},
+  {q:"כמה שנים עבד יעקב אצל לבן עבור נשותיו?", options:["7","14","20","21"], correct:1, diff:"hard"},
+  {q:"מהו שמו של המקום בו נאבק יעקב עם המלאך?", options:["בית אל","יבוק","חרן","שכם"], correct:1, diff:"hard"},
+  {q:"מי היה הבן השני של יוסף?", options:["מנשה","אפרים","בנימין","לוי"], correct:1, diff:"hard"},
+  {q:"כמה שנים חי יעקב בארץ מצרים לפני מותו?", options:["12","17","20","30"], correct:1, diff:"hard"},
+  {q:"באיזו פרשה מוזכרת לראשונה מצוות התפילין?", options:["יתרו","משפטים","בא","ואתחנן"], correct:2, diff:"hard"},
+  {q:"מי היה חמיו של משה?", options:["יתרו","קורח","אהרון","בצלאל"], correct:0, diff:"hard"},
+  {q:"כמה אנשים ירדו עם יעקב למצרים (לפי הפסוקים)?", options:["60","70","75","80"], correct:1, diff:"hard"},
+  {q:"מי בנה את ארון הברית והמשכן בעבודת אומנות?", options:["יהושע","בצלאל","אהרון","כלב"], correct:1, diff:"hard"},
+  {q:"באיזו פרשה מתוארת מצוות פרשת השמיטה?", options:["משפטים","בהר","במדבר","ראה"], correct:1, diff:"hard"},
+  {q:"מי היה הכוהן הראשון של עם ישראל?", options:["משה","אהרון","אלעזר","פנחס"], correct:1, diff:"hard"},
+  {q:"כמה מרגלים נשלחו לתור את הארץ?", options:["10","12","13","40"], correct:1, diff:"hard"},
+  {q:"מי משני המרגלים נשארו נאמנים לדבר ה'?", options:["יהושע וכלב","אהרון ומשה","פנחס ואלעזר","נדב ואביהוא"], correct:0, diff:"hard"},
+  {q:"מהו שמו של אביו של בלעם?", options:["בעור","צפור","עמרם","קהת"], correct:0, diff:"hard"},
+  {q:"כמה ערי מקלט הוקצו לבני ישראל?", options:["3","6","8","12"], correct:1, diff:"hard"},
+  {q:"מי היו שני בני אהרון שמתו בהקרבת קטורת זרה?", options:["נדב ואביהוא","אלעזר ואיתמר","פנחס ואלעזר","קורח ודתן"], correct:0, diff:"hard"},
+  {q:"באיזו פרשה מצווה משה את העם לפני מותו בשירה?", options:["וילך","האזינו","וזאת הברכה","ניצבים"], correct:1, diff:"hard"},
+  {q:"מהו שם הכלי שבו נשמרו עשרת הדיברות?", options:["מנורה","ארון הברית","שולחן הלחם","מזבח הקטורת"], correct:1, diff:"hard"},
+  {q:"כמה קרבנות נדרשו ביום הכיפורים מהכוהן הגדול?", options:["1 פר ו-2 שעירים","2 פרים","3 כבשים","פר אחד בלבד"], correct:0, diff:"hard"},
+  {q:"באיזו פרשה ניתן הציווי על הקמת המשכן לראשונה?", options:["יתרו","משפטים","תרומה","ויקהל"], correct:2, diff:"hard"},
+  {q:"מי היה המנהיג שהוביל את המרד נגד משה ואהרון?", options:["דתן","קורח","אבירם","און"], correct:1, diff:"hard"}
+];
+
+// טריוויה - חגים ומועדים
+const triviaHolidays = [
+  {q:"מתי חוגגים את חג הפסח?", options:["בניסן","בתשרי","באלול","בכסלו"], correct:0, diff:"easy"},
+  {q:"כמה ימים נמשך חג הסוכות?", options:["יום אחד","שלושה ימים","שבעה ימים","עשרה ימים"], correct:2, diff:"easy"},
+  {q:"מהו שמו של החג בו מדליקים נרות חנוכייה?", options:["פורים","חנוכה","שבועות","ט\"ו בשבט"], correct:1, diff:"easy"},
+  {q:"איזה חג חוגגים בתחילת השנה העברית?", options:["סוכות","ראש השנה","שבועות","פורים"], correct:1, diff:"easy"},
+  {q:"באיזה חג קוראים את מגילת אסתר?", options:["פסח","פורים","שבועות","חנוכה"], correct:1, diff:"easy"},
+  {q:"באיזה חג בונים סוכה?", options:["סוכות","פסח","שבועות","ראש השנה"], correct:0, diff:"easy"},
+  {q:"מהו היום הקדוש ביותר בלוח השנה העברי?", options:["פסח","יום כיפור","שבועות","סוכות"], correct:1, diff:"easy"},
+  {q:"באיזה חודש עברי חוגגים את חנוכה?", options:["תשרי","כסלו","אדר","ניסן"], correct:1, diff:"easy"},
+  {q:"באיזה חג נוהגים להתחפש?", options:["פורים","פסח","חנוכה","שבועות"], correct:0, diff:"easy"},
+  {q:"מהו שמו של הספר שקוראים בפורים?", options:["מגילת רות","מגילת איכה","מגילת אסתר","מגילת קהלת"], correct:2, diff:"easy"},
+  {q:"מהו המאכל המסורתי הנאכל בליל הסדר ומסמל את העבדות?", options:["מצה","חרוסת","מרור","כרפס"], correct:0, diff:"easy"},
+  {q:"באיזה חג נוהגים לאכול אוזני המן?", options:["חנוכה","פורים","פסח","שבועות"], correct:1, diff:"easy"},
+  {q:"מהו המאכל המסורתי של ראש השנה שמסמל שנה מתוקה?", options:["תפוח בדבש","מצה","סופגניה","קוגל"], correct:0, diff:"easy"},
+  {q:"מהו שם הצמח שמנענעים בסוכות יחד עם האתרוג?", options:["לולב","שופר","מצה","חלה"], correct:0, diff:"easy"},
+  {q:"באיזה חג נוהגים לשבת בסוכה?", options:["סוכות","שבועות","פסח","ראש השנה"], correct:0, diff:"easy"},
+  {q:"מהו המאכל הקלאסי של ט\"ו בשבט?", options:["פירות","מצות","סופגניות","קוגל"], correct:0, diff:"easy"},
+  {q:"מתי חוגגים את ט\"ו בשבט?", options:["בשבט","בניסן","בתשרי","באדר"], correct:0, diff:"easy"},
+  {q:"באיזה חג נדליק נרות שמונה ימים?", options:["פסח","חנוכה","סוכות","שבועות"], correct:1, diff:"easy"},
+  {q:"איזה חג חוגגים באייר ומציין יום עצמאות ישראל?", options:["יום השואה","יום העצמאות","יום ירושלים","ל\"ג בעומר"], correct:1, diff:"easy"},
+  {q:"מהו החג בו אוכלים מאכלי חלב?", options:["שבועות","חנוכה","פורים","סוכות"], correct:0, diff:"easy"},
+  {q:"מהו החג המכונה \"זמן מתן תורתנו\"?", options:["סוכות","שבועות","פסח","חנוכה"], correct:1, diff:"medium"},
+  {q:"כמה פעמים תוקעים בשופר בראש השנה (מניין בסיסי)?", options:["10","30","60","100"], correct:3, diff:"medium"},
+  {q:"כמה נרות מדליקים בליל השמיני של חנוכה (לא כולל שמש)?", options:["שבעה","שמונה","תשעה","שישה"], correct:1, diff:"medium"},
+  {q:"איזה חג חוגגים 49 ימים אחרי פסח?", options:["סוכות","שבועות","ראש השנה","פורים"], correct:1, diff:"medium"},
+  {q:"מהו שמו של הצום שלפני פורים?", options:["צום גדליה","תענית אסתר","עשרה בטבת","תשעה באב"], correct:1, diff:"medium"},
+  {q:"מהו שמו של הצום הגדול ביותר בשנה?", options:["תשעה באב","יום כיפור","תענית אסתר","עשרה בטבת"], correct:1, diff:"medium"},
+  {q:"כמה ימים נמשך חג הפסח בארץ ישראל?", options:["שבעה","שמונה","חמישה","עשרה"], correct:0, diff:"medium"},
+  {q:"מתי חוגגים את יום ירושלים?", options:["באייר","בתשרי","בניסן","באב"], correct:0, diff:"medium"},
+  {q:"מהו שם הצום שמציין את חורבן בית המקדש?", options:["תשעה באב","יום כיפור","תענית אסתר","צום גדליה"], correct:0, diff:"medium"},
+  {q:"כמה נרות יש בחנוכייה הרגילה (לא כולל שמש)?", options:["שבעה","שמונה","תשעה","עשרה"], correct:1, diff:"medium"},
+  {q:"מהו שמו של היום בו מציינים את מתן התורה בהר סיני?", options:["יום כיפור","שבועות","סוכות","פסח"], correct:1, diff:"medium"},
+  {q:"באיזה חודש עברי חל חג הסוכות?", options:["תשרי","כסלו","ניסן","אב"], correct:0, diff:"medium"},
+  {q:"מהו שמו של היום העשירי בחודש תשרי?", options:["ראש השנה","יום כיפור","סוכות","שמיני עצרת"], correct:1, diff:"medium"},
+  {q:"באיזה חג קוראים את מגילת רות?", options:["פסח","שבועות","סוכות","פורים"], correct:1, diff:"medium"},
+  {q:"מהו שם החג שמתחיל בערב ה-14 בניסן?", options:["פסח","שבועות","סוכות","ראש השנה"], correct:0, diff:"medium"},
+  {q:"באיזה חג נוהגים לקרוא את מגילת קהלת?", options:["פסח","שבועות","סוכות","חנוכה"], correct:2, diff:"medium"},
+  {q:"מהו שמו של היום השמיני של חג הסוכות?", options:["הושענא רבה","שמיני עצרת ושמחת תורה","יום כיפור","ל\"ג בעומר"], correct:1, diff:"medium"},
+  {q:"מתי מציינים את יום הזיכרון לחללי צה\"ל?", options:["באייר","בתשרי","בניסן","בכסלו"], correct:0, diff:"medium"},
+  {q:"מהו שמו של החג שמסמן את תחילת ספירת העומר?", options:["פסח","שבועות","סוכות","פורים"], correct:0, diff:"medium"},
+  {q:"כמה ימים יש בספירת העומר?", options:["33","40","49","50"], correct:2, diff:"medium"},
+  {q:"מהו שמו של הצום המתקיים בעשרה בטבת?", options:["זכר למצור על ירושלים","זכר לחורבן הבית","זכר למות גדליה","זכר לחטא העגל"], correct:0, diff:"hard"},
+  {q:"מי המלך הפרסי שבתקופתו אירעה מגילת אסתר?", options:["כורש","אחשוורוש","דריוש","נבוכדנצר"], correct:1, diff:"hard"},
+  {q:"מהו שמו של החג המצוין ב-ל\"ג בעומר?", options:["יום הילולת רשב\"י","יום כיפור קטן","יום ירושלים","יום העצמאות"], correct:0, diff:"hard"},
+  {q:"כמה שנים נמשך גלות בבל לפי המסורת?", options:["50","70","40","100"], correct:1, diff:"hard"},
+  {q:"מהו שמו של הקרבן שמובא בחג הסוכות בכל יום בבית המקדש (ניסוך)?", options:["מים","שמן","יין","דבש"], correct:0, diff:"hard"},
+  {q:"מהי המצווה המיוחדת המקושרת לחג הסוכות הקשורה לארבעת המינים?", options:["נטילת לולב, אתרוג, הדס וערבה","הדלקת נרות","תפילת הלל","ברכת המזון"], correct:0, diff:"hard"},
+  {q:"מהו שמו של היום שבו נהרג גדליה בן אחיקם?", options:["צום גדליה","תשעה באב","עשרה בטבת","י\"ז בתמוז"], correct:0, diff:"hard"},
+  {q:"באיזה תאריך עברי חל יום השואה?", options:["כ\"ז בניסן","י' בטבת","ט' באב","י\"ז בתמוז"], correct:0, diff:"hard"},
+  {q:"מהו שם הפיוט שאומרים במוצאי יום הכיפורים?", options:["אבינו מלכנו","אדון עולם","הנשמה לך","אקדמות"], correct:2, diff:"hard"},
+  {q:"מהו שמו של היום שבו לפי המסורת נפרצו חומות ירושלים בזמן החורבן?", options:["י\"ז בתמוז","ט' באב","י' בטבת","כ\"ט באלול"], correct:0, diff:"hard"},
+  {q:"מהי המצווה המיוחדת ביום הכיפורים שאינה תלויה בקרבן?", options:["תענית וחמשת העינויים","אכילת מצה","תקיעת שופר בלבד","הקפות עם התורה"], correct:0, diff:"hard"},
+  {q:"מהו שמו של החג בו קוראים הלל המלא בכל ימיו?", options:["סוכות","יום כיפור","ראש השנה","עשרה בטבת"], correct:0, diff:"hard"},
+  {q:"מהי הסיבה המסורתית לצום י\"ז בתמוז?", options:["שבירת הלוחות הראשונים","חטא המרגלים","מות אהרון","חנוכת המשכן"], correct:0, diff:"hard"},
+  {q:"מהו שמו של הפיוט הנאמר בליל ראש השנה לפני התקיעות?", options:["אבינו מלכנו","ארשת שפתינו","אקדמות","יגדל"], correct:1, diff:"hard"},
+  {q:"מהי תקופת \"בין המצרים\"?", options:["מי״ז בתמוז עד ט׳ באב","מראש השנה ליום כיפור","ספירת העומר","עשרת ימי תשובה"], correct:0, diff:"hard"},
+  {q:"מה שמו של יום הזיכרון המצוין ב-כ\"ז בניסן?", options:["יום הזיכרון לחללי צה\"ל","יום השואה","יום ירושלים","יום העצמאות"], correct:1, diff:"hard"},
+  {q:"מהו שמו של פרק התהילים הנאמר בעשרת ימי תשובה?", options:["מזמור כ\"ז (לדוד ה' אורי)","שיר המעלות","הלל","אשרי"], correct:0, diff:"hard"},
+  {q:"מהי המנהג המיוחד הנהוג בחול המועד סוכות בבית המקדש (שמחת בית השואבה)?", options:["שאיבת מים לניסוך וריקודים","קריאת מגילה","תענית","תפילת נשף"], correct:0, diff:"hard"},
+  {q:"מהו שם המנהג של אמירת \"עלינו לשבח\" ותקיעת שופר בסוף יום כיפור?", options:["נעילה","הבדלה","הקפה","ברכת לבנה"], correct:0, diff:"hard"},
+  {q:"מהו שמו של החג שמציין את כניסת בני ישראל לארץ ישראל לפי המסורת (חל בשבט)?", options:["ט\"ו בשבט","ל\"ג בעומר","ראש חודש","שמיני עצרת"], correct:0, diff:"hard"}
+];
+
+// זיכרון - סמלים לפי נושא
+const memoryParashot = ["📜","✡️","🕎","🍇","🐑","🌾","⭐","🔥"];
+const memoryHolidays  = ["🍎","🕯️","🎭","🍷","🌿","🧀","🇮🇱","🪕"];
+
+/* ===== ניווט משחקים ===== */
+let currentGame = null;
+let currentTopic = null;
+
+function openGamesMenu(){
+  hideAllScreens();
+  document.getElementById("gamesMenuScreen").classList.add("active");
+}
+
+function selectGame(game){
+  currentGame = game;
+  hideAllScreens();
+  document.getElementById("gameTopicScreen").classList.add("active");
+  const titles = {memory:"🧩 משחק זיכרון - בחר נושא", trivia:"🧠 טריוויה - בחר נושא", snakes:"🐍 סולמות ונחשים - בחר נושא"};
+  document.getElementById("gameTopicTitle").textContent = titles[game] || "בחר נושא";
+}
+
+let currentDifficulty = "medium";
+
+function selectTopic(topic){
+  currentTopic = topic;
+  hideAllScreens();
+  document.getElementById("difficultyScreen").classList.add("active");
+}
+
+function selectDifficulty(level){
+  currentDifficulty = level;
+  openPlayerSetup();
+}
+
+function goToDifficultyScreen(){
+  hideAllScreens();
+  document.getElementById("difficultyScreen").classList.add("active");
+}
+
+/* ===== הגדרת שחקנים ===== */
+let playerCount = 1;
+let playerNames = ["שחקן 1"];
+let playerScores = [0];
+
+function openPlayerSetup(){
+  playerCount = 1;
+  playerNames = ["שחקן 1"];
+
+  // אם יש פרופיל שמור, נשתמש בשם שלו לשחקן הראשון
+  const saved = localStorage.getItem("userProfile");
+  if(saved){
+    try{
+      const data = JSON.parse(saved);
+      if(data.name) playerNames[0] = data.name;
+    }catch(e){}
+  }
+
+  hideAllScreens();
+  document.getElementById("playerSetupScreen").classList.add("active");
+  renderPlayerNameInputs();
+  document.getElementById("playerCountDisplay").textContent = playerCount;
+}
+
+function changePlayerCount(delta){
+  const newCount = playerCount + delta;
+  if(newCount < 1 || newCount > 4) return;
+  playerCount = newCount;
+  document.getElementById("playerCountDisplay").textContent = playerCount;
+  renderPlayerNameInputs();
+}
+
+function renderPlayerNameInputs(){
+  const container = document.getElementById("playerNameInputs");
+  container.innerHTML = "";
+  for(let i=0; i<playerCount; i++){
+    const input = document.createElement("input");
+    input.type = "text";
+    input.className = "player-name-input";
+    input.placeholder = `שם שחקן ${i+1}`;
+    input.value = playerNames[i] || "";
+    input.dataset.index = i;
+    container.appendChild(input);
+  }
+}
+
+function startGameWithPlayers(){
+  const inputs = document.querySelectorAll(".player-name-input");
+  playerNames = [];
+  inputs.forEach((inp, i) => {
+    playerNames.push(inp.value.trim() || `שחקן ${i+1}`);
+  });
+  playerScores = new Array(playerCount).fill(0);
+
+  if(currentGame === "memory"){
+    openMemory();
+  } else {
+    openTimerSetup();
+  }
+}
+
+/* ===== הגדרת טיימר ===== */
+let timerEnabled = false;
+let timerSeconds = 30;
+
+function openTimerSetup(){
+  hideAllScreens();
+  document.getElementById("timerSetupScreen").classList.add("active");
+  document.getElementById("timerNoBtn").classList.add("selected");
+  document.getElementById("timerYesBtn").classList.remove("selected");
+  document.getElementById("timerSecondsSelect").style.display = "none";
+  timerEnabled = false;
+}
+
+function chooseTimerMode(enabled){
+  timerEnabled = enabled;
+  document.getElementById("timerNoBtn").classList.toggle("selected", !enabled);
+  document.getElementById("timerYesBtn").classList.toggle("selected", enabled);
+  document.getElementById("timerSecondsSelect").style.display = enabled ? "block" : "none";
+}
+
+function confirmTimerSetup(){
+  timerSeconds = parseInt(document.getElementById("timerSecondsSelect").value, 10);
+  if(currentGame === "trivia") openTrivia();
+  else if(currentGame === "snakes") openSnakes();
+}
+
+function renderPlayerScores(containerId){
+  const container = document.getElementById(containerId);
+  if(!container) return;
+  container.innerHTML = "";
+  playerNames.forEach((name, i) => {
+    const chip = document.createElement("div");
+    chip.className = "player-score-chip";
+    chip.textContent = `${name}: ${playerScores[i]}`;
+    container.appendChild(chip);
+  });
+}
+
+/* ===== טריוויה ===== */
+let triviaOrder = [];
+let triviaIndex = 0;
+let triviaScoreCount = 0;
+let triviaTotal = 0;
+let triviaQuestions = [];
+let triviaCurrentPlayer = 0;
+let questionTimerInterval = null;
+
+function startQuestionTimer(barId, containerId, onTimeout){
+  clearInterval(questionTimerInterval);
+  const bar = document.getElementById(barId);
+  const container = document.getElementById(containerId);
+  if(!timerEnabled){
+    container.classList.remove("visible");
+    return;
+  }
+  container.classList.add("visible");
+  bar.style.transition = "none";
+  bar.style.width = "100%";
+  requestAnimationFrame(()=>{
+    bar.style.transition = `width ${timerSeconds}s linear`;
+    bar.style.width = "0%";
+  });
+  questionTimerInterval = setTimeout(()=>{
+    onTimeout();
+  }, timerSeconds * 1000);
+}
+
+function stopQuestionTimer(){
+  clearInterval(questionTimerInterval);
+  clearTimeout(questionTimerInterval);
+}
+
+function shuffleArray(arr){
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function openTrivia(){
+  triviaQuestions = (currentTopic === "holidays" ? triviaHolidays : triviaParashot).filter(q => q.diff === currentDifficulty);
+  hideAllScreens();
+  document.getElementById("triviaScreen").classList.add("active");
+  triviaOrder = shuffleArray([...Array(triviaQuestions.length).keys()]);
+  triviaIndex = 0;
+  triviaScoreCount = 0;
+  triviaTotal = 0;
+  triviaCurrentPlayer = 0;
+  renderPlayerScores("triviaPlayersScores");
+  loadTriviaQuestion();
+}
+
+function loadTriviaQuestion(){
+  const qData = triviaQuestions[triviaOrder[triviaIndex]];
+  document.getElementById("triviaQuestion").textContent = qData.q;
+  if(playerNames.length > 1){
+    document.getElementById("triviaScore").textContent = `תור: ${playerNames[triviaCurrentPlayer]}`;
+  } else {
+    document.getElementById("triviaScore").textContent = `ניקוד: ${triviaScoreCount} / ${triviaTotal}`;
+  }
+  document.getElementById("triviaNext").style.display = "none";
+
+  document.querySelectorAll("#triviaPlayersScores .player-score-chip").forEach((chip,i)=>{
+    chip.classList.toggle("active", i === triviaCurrentPlayer);
+  });
+
+  startQuestionTimer("triviaTimerBar", "triviaTimerBarContainer", ()=>{
+    // הזמן נגמר - מתייחסים כתשובה שגויה
+    const opts = document.querySelectorAll(".trivia-option");
+    if(opts.length === 0) return;
+    opts.forEach(o => o.style.pointerEvents = "none");
+    triviaTotal++;
+    const qData2 = triviaQuestions[triviaOrder[triviaIndex]];
+    opts.forEach(o => { if(o.textContent.includes(qData2.options[qData2.correct])) o.classList.add("correct"); });
+    document.getElementById("triviaScore").textContent = playerNames.length <= 1 ? `ניקוד: ${triviaScoreCount} / ${triviaTotal}` : `⏰ נגמר הזמן ל-${playerNames[triviaCurrentPlayer]}!`;
+    document.getElementById("triviaNext").style.display = "inline-block";
+  });
+
+  const optsContainer = document.getElementById("triviaOptions");
+  optsContainer.innerHTML = "";
+
+  const labels = ["א","ב","ג","ד"];
+  const shuffledOptions = qData.options.map((opt,i)=>({opt,i}));
+  shuffleArray(shuffledOptions).forEach(({opt,i}, pos)=>{
+    const div = document.createElement("div");
+    div.className = "trivia-option";
+    div.innerHTML = `<span class="opt-prefix">${pos+1}.${labels[pos]}</span> ${opt}`;
+    div.addEventListener("click", ()=> checkTriviaAnswer(div, i===qData.correct));
+    optsContainer.appendChild(div);
+  });
+}
+
+function checkTriviaAnswer(el, isCorrect){
+  stopQuestionTimer();
+  const opts = document.querySelectorAll(".trivia-option");
+  opts.forEach(o => o.style.pointerEvents = "none");
+
+  triviaTotal++;
+  if(isCorrect){
+    el.classList.add("correct");
+    triviaScoreCount++;
+    playerScores[triviaCurrentPlayer]++;
+  } else {
+    el.classList.add("wrong");
+    const qData = triviaQuestions[triviaOrder[triviaIndex]];
+    opts.forEach(o => { if(o.textContent.includes(qData.options[qData.correct])) o.classList.add("correct"); });
+  }
+
+  renderPlayerScores("triviaPlayersScores");
+  document.querySelectorAll("#triviaPlayersScores .player-score-chip").forEach((chip,i)=>{
+    chip.classList.toggle("active", i === triviaCurrentPlayer);
+  });
+
+  if(playerNames.length <= 1){
+    document.getElementById("triviaScore").textContent = `ניקוד: ${triviaScoreCount} / ${triviaTotal}`;
+  }
+  document.getElementById("triviaNext").style.display = "inline-block";
+}
+
+function nextTriviaQuestion(){
+  triviaIndex = (triviaIndex+1) % triviaOrder.length;
+  if(triviaIndex === 0) triviaOrder = shuffleArray([...Array(triviaQuestions.length).keys()]);
+  if(playerNames.length > 1) triviaCurrentPlayer = (triviaCurrentPlayer+1) % playerNames.length;
+  loadTriviaQuestion();
+}
+
+/* ===== משחק זיכרון ===== */
+let memoryCards = [];
+let memoryFlipped = [];
+let memoryMatched = 0;
+let memoryAttempts = 0;
+let memoryLock = false;
+let memoryCurrentPlayer = 0;
+
+function openMemory(){
+  const symbols = currentTopic === "holidays" ? memoryHolidays : memoryParashot;
+  hideAllScreens();
+  document.getElementById("memoryScreen").classList.add("active");
+
+  memoryCards = shuffleArray([...symbols, ...symbols]);
+  memoryFlipped = [];
+  memoryMatched = 0;
+  memoryAttempts = 0;
+  memoryLock = false;
+  memoryCurrentPlayer = 0;
+  renderPlayerScores("memoryPlayersScores");
+  updateMemoryActiveChip();
+
+  document.getElementById("memoryInfo").textContent = `נסיונות: 0 | זוגות: 0/${symbols.length}`;
+
+  const grid = document.getElementById("memoryGrid");
+  grid.innerHTML = "";
+  memoryCards.forEach((symbol, idx) => {
+    const card = document.createElement("div");
+    card.className = "memory-card";
+    card.dataset.index = idx;
+    card.innerHTML = `<span class="symbol">${symbol}</span>`;
+    card.addEventListener("click", () => flipMemoryCard(card, symbol, idx));
+    grid.appendChild(card);
+  });
+}
+
+function updateMemoryActiveChip(){
+  document.querySelectorAll("#memoryPlayersScores .player-score-chip").forEach((chip,i)=>{
+    chip.classList.toggle("active", i === memoryCurrentPlayer);
+  });
+}
+
+function flipMemoryCard(card, symbol, idx){
+  if(memoryLock || card.classList.contains("flipped") || card.classList.contains("matched")) return;
+
+  card.classList.add("flipped");
+  memoryFlipped.push({card, symbol, idx});
+
+  if(memoryFlipped.length === 2){
+    memoryLock = true;
+    memoryAttempts++;
+    const [first, second] = memoryFlipped;
+    const totalPairs = (currentTopic === "holidays" ? memoryHolidays : memoryParashot).length;
+
+    if(first.symbol === second.symbol && first.idx !== second.idx){
+      first.card.classList.add("matched");
+      second.card.classList.add("matched");
+      memoryMatched++;
+      playerScores[memoryCurrentPlayer]++;
+      memoryFlipped = [];
+      memoryLock = false;
+      renderPlayerScores("memoryPlayersScores");
+      updateMemoryActiveChip();
+      document.getElementById("memoryInfo").textContent = `נסיונות: ${memoryAttempts} | זוגות: ${memoryMatched}/${totalPairs}`;
+      if(memoryMatched === totalPairs){
+        setTimeout(()=> document.getElementById("memoryInfo").textContent += " 🎉 כל הכבוד!", 300);
+      }
+    } else {
+      if(playerNames.length > 1) memoryCurrentPlayer = (memoryCurrentPlayer+1) % playerNames.length;
+      setTimeout(()=>{
+        first.card.classList.remove("flipped");
+        second.card.classList.remove("flipped");
+        memoryFlipped = [];
+        memoryLock = false;
+        updateMemoryActiveChip();
+        document.getElementById("memoryInfo").textContent = `נסיונות: ${memoryAttempts} | זוגות: ${memoryMatched}/${totalPairs}`;
+      }, 800);
+    }
+  }
+}
+
+/* ===== סולמות ונחשים ===== */
+const snakesLadders = {
+  4: 16, 23: 41, 46: 64, 67: 84
+};
+const snakesSnakes = {
+  18: 8, 39: 22, 58: 42, 75: 60, 92: 76
+};
+
+let snakesPositions = [1];
+let snakesCurrentPlayer = 0;
+let snakesAwaitingAnswer = false;
+let snakesPendingMove = 0;
+const snakesTokenIcons = ["🧑","👩","🧓","🧒"];
+
+function getSnakesQuestions(){
+  return (currentTopic === "holidays" ? triviaHolidays : triviaParashot).filter(q => q.diff === currentDifficulty);
+}
+
+function buildSnakesBoard(){
+  const board = document.getElementById("snakesBoard");
+  board.innerHTML = "";
+  // build numbers 100 -> 1 in boustrophedon (snake) order
+  for(let row=0; row<10; row++){
+    const rowNum = 10 - row;
+    const numbersInRow = [];
+    for(let col=1; col<=10; col++){
+      let num = (rowNum-1)*10 + col;
+      numbersInRow.push(num);
+    }
+    if(rowNum % 2 === 0) numbersInRow.reverse();
+
+    numbersInRow.forEach(num => {
+      const cell = document.createElement("div");
+      cell.className = "snakes-cell";
+      cell.dataset.num = num;
+      let extra = "";
+      if(snakesLadders[num]){
+        cell.classList.add("ladder");
+        extra = `<span class="cell-arrow">🪜→${snakesLadders[num]}</span>`;
+      }
+      if(snakesSnakes[num]){
+        cell.classList.add("snake");
+        extra = `<span class="cell-arrow">🐍→${snakesSnakes[num]}</span>`;
+      }
+      cell.innerHTML = `<span class="cell-num">${num}</span>${extra}`;
+      board.appendChild(cell);
+    });
+  }
+}
+
+function renderSnakesPlayer(){
+  document.querySelectorAll(".snakes-cell .player-token").forEach(t => t.remove());
+  snakesPositions.forEach((pos, i) => {
+    if(pos === 0) return; // עדיין לא יצא לדרך
+    const cell = document.querySelector(`.snakes-cell[data-num="${pos}"]`);
+    if(cell){
+      const token = document.createElement("span");
+      token.className = `player-token player-token-${i+1}`;
+      token.textContent = snakesTokenIcons[i] || "🧑";
+      cell.appendChild(token);
+    }
+  });
+}
+
+function openSnakes(){
+  hideAllScreens();
+  document.getElementById("snakesScreen").classList.add("active");
+  snakesPositions = new Array(playerNames.length).fill(0);
+  snakesCurrentPlayer = 0;
+  snakesAwaitingAnswer = false;
+  renderPlayerScores("snakesPlayersScores");
+  updateSnakesActiveChip();
+  document.getElementById("snakesMessage").textContent =
+    playerNames.length > 1 ? `תור: ${playerNames[0]} — לחץ על הקובייה!` : "לחץ על הקובייה כדי להתחיל!";
+  document.getElementById("snakesQuestion").classList.remove("visible");
+  document.getElementById("snakesQuestion").innerHTML = "";
+  document.getElementById("snakesDice").disabled = false;
+  buildSnakesBoard();
+  renderSnakesPlayer();
+}
+
+function updateSnakesActiveChip(){
+  document.querySelectorAll("#snakesPlayersScores .player-score-chip").forEach((chip,i)=>{
+    chip.classList.toggle("active", i === snakesCurrentPlayer);
+  });
+}
+
+function rollDice(){
+  if(snakesAwaitingAnswer) return;
+  const roll = Math.floor(Math.random()*6)+1;
+  document.getElementById("snakesDice").textContent = "🎲 " + roll;
+  const playerLabel = playerNames.length > 1 ? `${playerNames[snakesCurrentPlayer]} הטיל ${roll}!` : `הטלת ${roll}!`;
+  document.getElementById("snakesMessage").textContent = playerLabel;
+
+  let newPos = snakesPositions[snakesCurrentPlayer] + roll;
+  if(newPos > 100) newPos = snakesPositions[snakesCurrentPlayer]; // אין מעבר
+
+  snakesPendingMove = newPos;
+  askSnakesQuestion(newPos);
+}
+
+function askSnakesQuestion(newPos){
+  const questions = getSnakesQuestions();
+  const qData = questions[Math.floor(Math.random()*questions.length)];
+  snakesAwaitingAnswer = true;
+  document.getElementById("snakesDice").disabled = true;
+
+  const qBox = document.getElementById("snakesQuestion");
+  qBox.classList.add("visible");
+
+  const labels = ["א","ב","ג","ד"];
+  const shuffled = qData.options.map((opt,i)=>({opt,i}));
+  const shuf = shuffleArray(shuffled);
+
+  qBox.innerHTML = `<b>${qData.q}</b><div class="trivia-options" style="margin-top:10px;"></div>`;
+  const optsContainer = qBox.querySelector(".trivia-options");
+  shuf.forEach(({opt,i}, pos)=>{
+    const div = document.createElement("div");
+    div.className = "trivia-option";
+    div.innerHTML = `<span class="opt-prefix">${pos+1}.${labels[pos]}</span> ${opt}`;
+    div.addEventListener("click", ()=>{
+      stopQuestionTimer();
+      const correct = i === qData.correct;
+      document.querySelectorAll("#snakesQuestion .trivia-option").forEach(o=>o.style.pointerEvents="none");
+      if(correct){
+        div.classList.add("correct");
+        document.getElementById("snakesMessage").textContent = "✅ נכון! מתקדם...";
+        setTimeout(()=> movePlayerTo(snakesPendingMove), 800);
+      } else {
+        div.classList.add("wrong");
+        document.querySelectorAll("#snakesQuestion .trivia-option").forEach(o=>{
+          if(o.textContent.includes(qData.options[qData.correct])) o.classList.add("correct");
+        });
+        document.getElementById("snakesMessage").textContent = "❌ לא נכון... נשאר במקום";
+        setTimeout(()=> finishSnakesTurn(), 1200);
+      }
+    });
+    optsContainer.appendChild(div);
+  });
+
+  startQuestionTimer("snakesTimerBar", "snakesTimerBarContainer", ()=>{
+    document.querySelectorAll("#snakesQuestion .trivia-option").forEach(o=>o.style.pointerEvents="none");
+    const opts2 = document.querySelectorAll("#snakesQuestion .trivia-option");
+    opts2.forEach(o=>{ if(o.textContent.includes(qData.options[qData.correct])) o.classList.add("correct"); });
+    document.getElementById("snakesMessage").textContent = "⏰ נגמר הזמן... נשאר במקום";
+    setTimeout(()=> finishSnakesTurn(), 1200);
+  });
+}
+
+function movePlayerTo(pos){
+  snakesPositions[snakesCurrentPlayer] = pos;
+  playerScores[snakesCurrentPlayer]++;
+  renderPlayerScores("snakesPlayersScores");
+  updateSnakesActiveChip();
+  renderSnakesPlayer();
+
+  if(snakesLadders[pos]){
+    document.getElementById("snakesMessage").textContent = `🪜 סולם! עולה ל-${snakesLadders[pos]}`;
+    snakesPositions[snakesCurrentPlayer] = snakesLadders[pos];
+    setTimeout(()=>{ renderSnakesPlayer(); finishSnakesTurn(); }, 800);
+    return;
+  }
+  if(snakesSnakes[pos]){
+    document.getElementById("snakesMessage").textContent = `🐍 נחש! יורד ל-${snakesSnakes[pos]}`;
+    snakesPositions[snakesCurrentPlayer] = snakesSnakes[pos];
+    setTimeout(()=>{ renderSnakesPlayer(); finishSnakesTurn(); }, 800);
+    return;
+  }
+
+  if(snakesPositions[snakesCurrentPlayer] === 100){
+    document.getElementById("snakesMessage").textContent = `🎉 ${playerNames[snakesCurrentPlayer]} הגיע ל-100! ניצח!`;
+    document.getElementById("snakesDice").disabled = true;
+    snakesAwaitingAnswer = false;
+    document.getElementById("snakesQuestion").classList.remove("visible");
+    return;
+  }
+
+  finishSnakesTurn();
+}
+
+function finishSnakesTurn(){
+  stopQuestionTimer();
+  document.getElementById("snakesTimerBarContainer").classList.remove("visible");
+  snakesAwaitingAnswer = false;
+  document.getElementById("snakesQuestion").classList.remove("visible");
+  document.getElementById("snakesQuestion").innerHTML = "";
+  document.getElementById("snakesDice").disabled = false;
+  document.getElementById("snakesDice").textContent = "🎲";
+
+  if(snakesPositions[snakesCurrentPlayer] === 100) return;
+
+  if(playerNames.length > 1){
+    snakesCurrentPlayer = (snakesCurrentPlayer+1) % playerNames.length;
+    updateSnakesActiveChip();
+    document.getElementById("snakesMessage").textContent = `תור: ${playerNames[snakesCurrentPlayer]} — לחץ על הקובייה!`;
+  } else {
+    document.getElementById("snakesMessage").textContent += " — לחץ על הקובייה לתור הבא";
+  }
+}
+
+
+
+/* ===== מתי אני מתגייס ===== */
+let draftDate = null;
+let draftGender = null;
+let draftUnit = null;
+let draftExtendMonths = 0;
+let draftCustomDate = null;
+
+const draftUnitsMale = [
+  "🪖 חי\"ר - גולני","🪖 חי\"ר - צנחנים","🪖 חי\"ר - גבעתי","🪖 חי\"ר - נחל","🪖 חי\"ר - כפיר",
+  "🚀 שריון","🔧 חיל הנדסה","💻 יחידת תקשוב/סייבר",
+  "🛡️ מג\"ב","✈️ חיל האוויר - טכנאים","🚢 חיל הים","🎯 יחידות מודיעין",
+  "🚑 חיל הרפואה","📡 קשר ותקשוב","🏗️ לוגיסטיקה ואפסנאות","⭐ סיווג מיון (יתכן ותשובץ ליחידה מובחרת)"
+];
+
+const draftUnitsFemale = [
+  "🎯 קצינת תוכן / הוראה","💻 יחידת תקשוב/סייבר","🎯 יחידות מודיעין","📡 קשר ותקשוב",
+  "🚑 חיל הרפואה","🏗️ לוגיסטיקה ואפסנאות","✈️ חיל האוויר - בקרה/טכנאיות",
+  "🛡️ מג\"ב","⚖️ פרקליטות צבאית","📊 משאבי אנוש (משא\"ן)",
+  "🎓 חיל החינוך","🪖 חי\"ר - מסלולי קרביות (כרמלים/לוטם/בארדלס)",
+  "🚢 חיל הים","🔧 חיל הנדסה",
+  "📰 דובר צה\"ל / יחידת תקשורת","⭐ סיווג מיון (יתכן ותשובץ ליחידה מובחרת)"
+];
+
+function openDraftScreen(){
+  hideAllScreens();
+  document.getElementById("draftScreen").classList.add("active");
+}
+
+function goToDraftScreen(){
+  hideAllScreens();
+  document.getElementById("draftScreen").classList.add("active");
+}
+
+function selectDraftGender(gender){
+  draftGender = gender;
+  document.getElementById("draftMaleBtn").classList.toggle("selected", gender === "male");
+  document.getElementById("draftFemaleBtn").classList.toggle("selected", gender === "female");
+}
+
+function goToUnitSelection(){
+  const dateVal = document.getElementById("draftDateInput").value;
+  if(!dateVal){ alert("❌ נא לבחור תאריך גיוס"); return; }
+  if(!draftGender){ alert("❌ נא לבחור בן / בת"); return; }
+
+  draftDate = new Date(dateVal);
+
+  hideAllScreens();
+  document.getElementById("draftUnitScreen").classList.add("active");
+
+  const units = draftGender === "male" ? draftUnitsMale : draftUnitsFemale;
+  const list = document.getElementById("unitsList");
+  list.innerHTML = "";
+  units.forEach(unit => {
+    const div = document.createElement("div");
+    div.className = "unit-item";
+    div.textContent = unit;
+    div.addEventListener("click", ()=>{
+      draftUnit = unit;
+      goToExtendScreen();
+    });
+    list.appendChild(div);
+  });
+}
+
+function goToUnitScreen(){
+  hideAllScreens();
+  document.getElementById("draftUnitScreen").classList.add("active");
+}
+
+function goToExtendScreen(){
+  hideAllScreens();
+  document.getElementById("draftExtendScreen").classList.add("active");
+}
+
+function answerExtend(hasExtend){
+  if(hasExtend){
+    hideAllScreens();
+    document.getElementById("draftExtendMonthsScreen").classList.add("active");
+
+    const options = [0.5, 1, 2, 3, 4];
+    const list = document.getElementById("extendMonthsList");
+    list.innerHTML = "";
+    options.forEach(months => {
+      const div = document.createElement("div");
+      div.className = "unit-item";
+      div.textContent = months === 0.5 ? "חצי חודש (0.5)" : `${months} חודשים`;
+      div.addEventListener("click", ()=>{
+        draftExtendMonths = months;
+        draftCustomDate = null;
+        showDraftResult();
+      });
+      list.appendChild(div);
+    });
+
+    // אפשרות "אחר..." - תאריך מדויק
+    const otherDiv = document.createElement("div");
+    otherDiv.className = "unit-item";
+    otherDiv.textContent = "📅 אחר... (בחר תאריך מדויק)";
+    otherDiv.addEventListener("click", ()=>{
+      hideAllScreens();
+      document.getElementById("draftCustomDateScreen").classList.add("active");
+    });
+    list.appendChild(otherDiv);
+  } else {
+    draftExtendMonths = 0;
+    draftCustomDate = null;
+    showDraftResult();
+  }
+}
+
+function confirmCustomDraftDate(){
+  const val = document.getElementById("draftCustomDateInput").value;
+  if(!val){ alert("❌ נא לבחור תאריך"); return; }
+  draftCustomDate = new Date(val);
+  draftExtendMonths = 0;
+  showDraftResult();
+}
+
+function showDraftResult(){
+  hideAllScreens();
+  document.getElementById("draftResultScreen").classList.add("active");
+
+  // חישוב התאריך הסופי
+  let finalDate;
+  let summary;
+  const genderLabel = draftGender === "male" ? "בן" : "בת";
+
+  if(draftCustomDate){
+    finalDate = new Date(draftCustomDate);
+    const dateStr = finalDate.toLocaleDateString("he-IL");
+    summary = `${genderLabel} | ${draftUnit}<br>תאריך מדויק: <b>${dateStr}</b>`;
+  } else {
+    finalDate = new Date(draftDate);
+    if(draftExtendMonths > 0){
+      const wholeMonths = Math.floor(draftExtendMonths);
+      const hasHalf = draftExtendMonths % 1 !== 0;
+      finalDate.setMonth(finalDate.getMonth() + wholeMonths);
+      if(hasHalf) finalDate.setDate(finalDate.getDate() + 15);
+    }
+    const dateStr = finalDate.toLocaleDateString("he-IL");
+    summary = `${genderLabel} | ${draftUnit}<br>תאריך גיוס: <b>${dateStr}</b>`;
+    if(draftExtendMonths > 0){
+      const extLabel = draftExtendMonths === 0.5 ? "חצי חודש" : `${draftExtendMonths} חודשים`;
+      summary += `<br>(כולל הארכה של ${extLabel})`;
+    }
+  }
+
+  document.getElementById("draftSummaryText").innerHTML = summary;
+  startDraftCountdown(finalDate);
+}
+
+let draftCountdownInterval = null;
+function startDraftCountdown(targetDate){
+  clearInterval(draftCountdownInterval);
+
+  function update(){
+    const now = new Date().getTime();
+    const distance = targetDate.getTime() - now;
+
+    if(distance <= 0){
+      clearInterval(draftCountdownInterval);
+      document.getElementById("draftDays").textContent = 0;
+      document.getElementById("draftHours").textContent = 0;
+      document.getElementById("draftMinutes").textContent = 0;
+      document.getElementById("draftSeconds").textContent = 0;
+      return;
+    }
+
+    document.getElementById("draftDays").textContent = Math.floor(distance / 86400000);
+    document.getElementById("draftHours").textContent = Math.floor(distance % 86400000 / 3600000);
+    document.getElementById("draftMinutes").textContent = Math.floor(distance % 3600000 / 60000);
+    document.getElementById("draftSeconds").textContent = Math.floor(distance % 60000 / 1000);
+  }
+
+  update();
+  draftCountdownInterval = setInterval(update, 1000);
+}
+
+
+/* ===== הגבלת תאריכים להיום ואילך ===== */
+document.addEventListener("DOMContentLoaded", ()=>{
+  const todayStr = new Date().toISOString().split("T")[0];
+  const draftInput = document.getElementById("draftDateInput");
+  const customInput = document.getElementById("draftCustomDateInput");
+  if(draftInput) draftInput.min = todayStr;
+  if(customInput) customInput.min = todayStr;
+});
+
+</script>
+
+<div id="calendarOverlay">
+  <div id="calendarBox">
+    <button class="cal-close" id="calClose">🏠 חזרה</button>
+    <div class="cal-header">
+      <button class="cal-nav" id="calPrev">&#8249;</button>
+      <h2 id="calTitle"></h2>
+      <button class="cal-nav" id="calNext">&#8250;</button>
+    </div>
+    <div class="cal-grid" id="calDayNames"></div>
+    <div class="cal-grid" id="calDays"></div>
+    <div id="calCountdownResult"></div>
+  </div>
+</div>
+
+
+<div id="tipOverlay" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;">
+  <div id="tipBox">
+    <button id="tipClose">✕</button>
+    <div class="tip-icon">💡</div>
+    <h2>הטיפ היומי שלך</h2>
+    <p id="tipText"></p>
+    <button id="tipNew">🔄 טיפ נוסף</button>
+  </div>
+</div>
+
+
+<!-- מסך טריוויה -->
+<div id="triviaScreen" class="screen">
+  <button class="backBtn" onclick="goHome()">⬅ חזור</button>
+  <div class="content">
+    <h1>🧠 טריוויה - חגים ופרשות</h1>
+    <div class="trivia-score" id="triviaScore">ניקוד: 0 / 0</div>
+    <div class="trivia-question" id="triviaQuestion"></div>
+    <div class="trivia-options" id="triviaOptions"></div>
+    <button class="trivia-next" id="triviaNext" onclick="nextTriviaQuestion()">השאלה הבאה ⬅</button>
+  </div>
+</div>
+
+<!-- מסך פרופיל -->
+<div id="profileScreen" class="screen">
+  <button class="backBtn" onclick="goHome()">⬅ חזור</button>
+  <div class="content">
+    <h1>👤 הפרופיל שלי</h1>
+    <label>שם:</label>
+    <input type="text" id="profileName" placeholder="הכנס את שמך">
+    <label>תאריך לידה:</label>
+    <input type="date" id="profileBirthdate">
+    <button id="profileSave" onclick="saveProfile()">💾 שמור פרופיל</button>
+    <div id="profileResult"></div>
+  </div>
+</div>
+
+
+<!-- מסך תפריט משחקים -->
+<div id="gamesMenuScreen" class="screen">
+  <button class="backBtn" onclick="goHome()">⬅ חזור</button>
+  <div class="content">
+    <h1>🎮 משחקים</h1>
+    <div class="games-buttons">
+      <button onclick="selectGame('memory')">🧩 משחק זיכרון</button>
+      <button onclick="selectGame('trivia')">🧠 טריוויה</button>
+      <button onclick="selectGame('snakes')">🐍 סולמות ונחשים</button>
+    </div>
+  </div>
+</div>
+
+<!-- מסך בחירת נושא -->
+<div id="gameTopicScreen" class="screen">
+  <button class="backBtn" onclick="openGamesMenu()">⬅ חזור</button>
+  <div class="content">
+    <h1 id="gameTopicTitle">בחר נושא</h1>
+    <div class="games-buttons">
+      <button onclick="selectTopic('parashot')">📖 פרשות ושבתות</button>
+      <button onclick="selectTopic('holidays')">🎉 חגים ומועדים</button>
+    </div>
+  </div>
+</div>
+
+<!-- מסך טריוויה -->
+<div id="triviaScreen" class="screen">
+  <button class="backBtn" onclick="openGamesMenu()">⬅ חזור</button>
+  <div class="content">
+    <h1>🧠 טריוויה</h1>
+    <div class="question-timer-bar-container" id="triviaTimerBarContainer"><div class="question-timer-bar" id="triviaTimerBar"></div></div>
+    <div class="players-scores" id="triviaPlayersScores"></div>
+    <div class="trivia-score" id="triviaScore">ניקוד: 0 / 0</div>
+    <div class="trivia-question" id="triviaQuestion"></div>
+    <div class="trivia-options" id="triviaOptions"></div>
+    <button class="trivia-next" id="triviaNext" onclick="nextTriviaQuestion()">השאלה הבאה ⬅</button>
+  </div>
+</div>
+
+<!-- מסך זיכרון -->
+<div id="memoryScreen" class="screen">
+  <button class="backBtn" onclick="openGamesMenu()">⬅ חזור</button>
+  <div class="content">
+    <h1>🧩 משחק זיכרון</h1>
+    <div class="players-scores" id="memoryPlayersScores"></div>
+    <div class="memory-info" id="memoryInfo">נסיונות: 0 | זוגות: 0/8</div>
+    <div class="memory-grid" id="memoryGrid"></div>
+  </div>
+</div>
+
+<!-- מסך סולמות ונחשים -->
+<div id="snakesScreen" class="screen">
+  <button class="backBtn" onclick="openGamesMenu()">⬅ חזור</button>
+  <div class="content">
+    <h1>🐍 סולמות ונחשים</h1>
+    <div class="players-scores" id="snakesPlayersScores"></div>
+    <div class="snakes-board" id="snakesBoard"></div>
+    <div class="snakes-controls">
+      <div id="snakesMessage"></div>
+      <div class="question-timer-bar-container" id="snakesTimerBarContainer"><div class="question-timer-bar" id="snakesTimerBar"></div></div>
+    <div id="snakesQuestion"></div>
+      <button id="snakesDice" onclick="rollDice()">🎲</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- מסך הגדרת שחקנים -->
+<div id="playerSetupScreen" class="screen">
+  <button class="backBtn" onclick="goToDifficultyScreen()">⬅ חזור</button>
+  <div class="content">
+    <h1>👥 כמה שחקנים?</h1>
+    <div id="playerCountRow">
+      <button onclick="changePlayerCount(-1)">−</button>
+      <span id="playerCountDisplay">1</span>
+      <button onclick="changePlayerCount(1)">+</button>
+    </div>
+    <div id="playerNameInputs"></div>
+    <button id="playerSetupStart" onclick="startGameWithPlayers()">▶ התחל משחק</button>
+  </div>
+</div>
+
+
+<!-- מסך הגדרת טיימר -->
+<div id="timerSetupScreen" class="screen">
+  <button class="backBtn" onclick="openPlayerSetup()">⬅ חזור</button>
+  <div class="content">
+    <h1>⏱️ זמן לתשובה?</h1>
+    <div class="timer-choice-buttons">
+      <button id="timerNoBtn" onclick="chooseTimerMode(false)">לא, בלי טיימר</button>
+      <button id="timerYesBtn" onclick="chooseTimerMode(true)">כן, עם טיימר</button>
+    </div>
+    <select id="timerSecondsSelect">
+      <option value="10">10 שניות</option>
+      <option value="20">20 שניות</option>
+      <option value="30" selected>30 שניות</option>
+      <option value="40">40 שניות</option>
+      <option value="50">50 שניות</option>
+      <option value="60">60 שניות</option>
+    </select>
+    <button id="timerSetupStart" onclick="confirmTimerSetup()">▶ המשך</button>
+  </div>
+</div>
+
+
+<!-- מסך רמת קושי -->
+<div id="difficultyScreen" class="screen">
+  <button class="backBtn" onclick="openGamesMenu()">⬅ חזור</button>
+  <div class="content">
+    <h1>🎯 בחר רמת קושי</h1>
+    <div class="games-buttons">
+      <button class="diff-easy" onclick="selectDifficulty('easy')">😊 קל</button>
+      <button class="diff-medium" onclick="selectDifficulty('medium')">🤔 בינוני</button>
+      <button class="diff-hard" onclick="selectDifficulty('hard')">🔥 קשה</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- מסך 1: תאריך גיוס + בן/בת -->
+<div id="draftScreen" class="screen">
+  <button class="backBtn" onclick="goHome()">⬅ חזור</button>
+  <div class="content">
+    <h1>🪖 מתי אני מתגייס?</h1>
+    <label style="display:block; margin:15px 0 5px; font-size:18px;">תאריך הגיוס שלי:</label>
+    <input type="date" id="draftDateInput" min="">
+    <div class="draft-gender-buttons">
+      <button id="draftMaleBtn" onclick="selectDraftGender('male')">👦 אני בן</button>
+      <button id="draftFemaleBtn" onclick="selectDraftGender('female')">👧 אני בת</button>
+    </div>
+    <button id="draftNextBtn" onclick="goToUnitSelection()">▶ המשך</button>
+  </div>
+</div>
+
+<!-- מסך 2: בחירת יחידה -->
+<div id="draftUnitScreen" class="screen">
+  <button class="backBtn" onclick="goToDraftScreen()">⬅ חזור</button>
+  <div class="content">
+    <h1>🎯 לאיזו יחידה אתה רוצה?</h1>
+    <div class="units-list" id="unitsList"></div>
+  </div>
+</div>
+
+<!-- מסך 3: האם מתארך? -->
+<div id="draftExtendScreen" class="screen">
+  <button class="backBtn" onclick="goToUnitScreen()">⬅ חזור</button>
+  <div class="content">
+    <h1>📋 האם יש לך תאריך מתארך?</h1>
+    <p style="font-size:18px; opacity:0.8; margin-bottom:10px;">(דחיית גיוס / הקפצה)</p>
+    <div class="extend-buttons">
+      <button onclick="answerExtend(true)">✅ כן</button>
+      <button onclick="answerExtend(false)">❌ לא</button>
+    </div>
+  </div>
+</div>
+
+<!-- מסך 4: כמה חודשי הארכה -->
+<div id="draftExtendMonthsScreen" class="screen">
+  <button class="backBtn" onclick="goToExtendScreen()">⬅ חזור</button>
+  <div class="content">
+    <h1>⏳ לכמה זמן ההארכה?</h1>
+    <div class="units-list" id="extendMonthsList"></div>
+  </div>
+</div>
+
+<!-- מסך 5: תוצאה סופית -->
+<div id="draftResultScreen" class="screen">
+  <button class="backBtn" onclick="goHome()">🏠 חזרה</button>
+  <div class="content">
+    <h1>🪖 המסלול שלך</h1>
+    <div id="draftSummaryText" class="draft-final-date"></div>
+    <div class="draft-countdown">
+      <div class="draft-box"><span id="draftDays">0</span><p>ימים</p></div>
+      <div class="draft-box"><span id="draftHours">0</span><p>שעות</p></div>
+      <div class="draft-box"><span id="draftMinutes">0</span><p>דקות</p></div>
+      <div class="draft-box"><span id="draftSeconds">0</span><p>שניות</p></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- מסך תאריך מדויק (אחר) -->
+<div id="draftCustomDateScreen" class="screen">
+  <button class="backBtn" onclick="answerExtend(true)">⬅ חזור</button>
+  <div class="content">
+    <h1>📅 בחר תאריך מדויק</h1>
+    <p style="font-size:18px; opacity:0.8; margin-bottom:10px;">התאריך הסופי של הגיוס/השחרור שלך</p>
+    <input type="date" id="draftCustomDateInput" min="">
+    <button id="draftNextBtn" onclick="confirmCustomDraftDate()">▶ המשך</button>
+  </div>
+</div>
 
 </body>
 </html>
